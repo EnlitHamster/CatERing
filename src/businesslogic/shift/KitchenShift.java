@@ -18,10 +18,10 @@ public class KitchenShift extends Shift{
         availableCooks = new ArrayList<User>();
     }
 
-    public boolean isAvailable(User chef){
+    public boolean isAvailable(User cook){
         boolean available = false;
-        if(chef.isChef()){
-             available = availableCooks.contains(chef);
+        if(cook.isCook()){
+             available = availableCooks.contains(cook);
         }
         return available;
     }
