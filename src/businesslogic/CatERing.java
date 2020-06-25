@@ -1,12 +1,10 @@
 package businesslogic;
 
 import businesslogic.event.EventManager;
-import businesslogic.menu.Menu;
 import businesslogic.menu.MenuManager;
 import businesslogic.recipe.RecipeManager;
 import businesslogic.user.UserManager;
 import persistence.MenuPersistence;
-import persistence.PersistenceManager;
 
 public class CatERing {
     private static CatERing singleInstance;
@@ -18,12 +16,12 @@ public class CatERing {
         return singleInstance;
     }
 
-    private MenuManager menuMgr;
-    private RecipeManager recipeMgr;
-    private UserManager userMgr;
-    private EventManager eventMgr;
+    private final MenuManager menuMgr;
+    private final RecipeManager recipeMgr;
+    private final UserManager userMgr;
+    private final EventManager eventMgr;
 
-    private MenuPersistence menuPersistence;
+    private final MenuPersistence menuPersistence;
 
     private CatERing() {
         menuMgr = new MenuManager();

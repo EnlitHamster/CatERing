@@ -3,21 +3,19 @@ package businesslogic.recipe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import persistence.PersistenceManager;
-import persistence.ResultHandler;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Recipe {
-    private static Map<Integer, Recipe> all = new HashMap<>();
+    private static final Map<Integer, Recipe> all = new HashMap<>();
 
     private int id;
     private String name;
 
-    private Recipe() {
-
-    }
+    private Recipe() {}
 
     public Recipe(String name) {
         id = 0;
@@ -40,27 +38,19 @@ public class Recipe {
 
     public static ObservableList<Recipe> loadAllRecipes() {
         String query = "SELECT * FROM Recipes";
-        PersistenceManager.executeQuery(query, new ResultHandler() {
-            @Override
-            public void handle(ResultSet rs) throws SQLException {
-                int id = rs.getInt("id");
-                if (all.containsKey(id)) {
-                    Recipe rec = all.get(id);
-                    rec.name = rs.getString("name");
-                } else {
-                    Recipe rec = new Recipe(rs.getString("name"));
-                    rec.id = id;
-                    all.put(rec.id, rec);
-                }
+        PersistenceManager.executeQuery(query, rs -> {
+            int id = rs.getInt("id");
+            if (all.containsKey(id)) {
+                Recipe rec = all.get(id);
+                rec.name = rs.getString("name");
+            } else {
+                Recipe rec = new Recipe(rs.getString("name"));
+                rec.id = id;
+                all.put(rec.id, rec);
             }
         });
         ObservableList<Recipe> ret =  FXCollections.observableArrayList(all.values());
-        Collections.sort(ret, new Comparator<Recipe>() {
-            @Override
-            public int compare(Recipe o1, Recipe o2) {
-                return (o1.getName().compareTo(o2.getName()));
-            }
-        });
+        ret.sort(Comparator.comparing(Recipe::getName));
         return ret;
     }
 
@@ -72,13 +62,10 @@ public class Recipe {
         if (all.containsKey(id)) return all.get(id);
         Recipe rec = new Recipe();
         String query = "SELECT * FROM Recipes WHERE id = " + id;
-        PersistenceManager.executeQuery(query, new ResultHandler() {
-            @Override
-            public void handle(ResultSet rs) throws SQLException {
-                    rec.name = rs.getString("name");
-                    rec.id = id;
-                    all.put(rec.id, rec);
-            }
+        PersistenceManager.executeQuery(query, rs -> {
+                rec.name = rs.getString("name");
+                rec.id = id;
+                all.put(rec.id, rec);
         });
         return rec;
     }

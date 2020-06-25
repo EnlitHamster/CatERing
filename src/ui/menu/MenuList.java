@@ -67,6 +67,8 @@ public class MenuList {
                 @Override
                 public void changed(ObservableValue<? extends Menu> observableValue, Menu oldMenu, Menu newMenu) {
                     User u = CatERing.getInstance().getUserManager().getCurrentUser();
+                    System.out.println(u.getId());
+
                     eliminaButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));
                     apriButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));
                     copiaButton.setDisable(newMenu == null);

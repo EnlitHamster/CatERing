@@ -3,15 +3,15 @@ package persistence;
 import java.sql.*;
 
 public class PersistenceManager {
-    private static String url = "jdbc:mysql://localhost:3306/catering?serverTimezone=UTC";
-    private static String username = "catering";
-    private static String password = "BYEk{Y7W+8hkZk.-";
+    private static final String url = "jdbc:mysql://localhost:3306/catering?serverTimezone=UTC";
+    private static final String username = "catering";
+    private static final String password = "BYEk{Y7W+8hkZk.-";
 
     private static int lastId;
 
     public static String escapeString(String input) {
         input = input.replace("\\", "\\\\");
-        input = input.replace("\'", "\\\'");
+        input = input.replace("'", "\\'");
         input = input.replace("\"", "\\\"");
         input = input.replace("\n", "\\n");
         input = input.replace("\t", "\\t");
@@ -48,7 +48,7 @@ public class PersistenceManager {
         int[] result = new int[0];
         try (
                 Connection conn = DriverManager.getConnection(url, username, password);
-                PreparedStatement ps = conn.prepareStatement(parametrizedQuery, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement ps = conn.prepareStatement(parametrizedQuery, Statement.RETURN_GENERATED_KEYS)
         ) {
             for (int i = 0; i < itemNumber; i++) {
                 handler.handleBatchItem(ps, i);
