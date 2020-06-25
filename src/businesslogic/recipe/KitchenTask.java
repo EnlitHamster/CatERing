@@ -9,7 +9,7 @@ import java.util.*;
 public class KitchenTask {
     private static final Map<Integer, KitchenTask> all = new HashMap<>();
 
-    private int id;
+    private Integer id;
     private String name;
     private List<String> notes;
     private List<String> tags;
@@ -41,6 +41,13 @@ public class KitchenTask {
         List<Preparation> allPreparations = new ArrayList<>(usedPreparations);
         for (Preparation p : usedPreparations) allPreparations.addAll(p.getAllUsedPreparations());
         return allPreparations;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof KitchenTask) return ((KitchenTask) obj).id.equals(id);
+        else if (obj instanceof Integer) return obj.equals(id);
+        else return false;
     }
 
     // STATIC METHODS FOR PERSISTENCE
