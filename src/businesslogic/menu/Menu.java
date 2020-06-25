@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Menu {
@@ -210,7 +211,7 @@ public class Menu {
                 updatedList.add(mi);
             } else {
                 prev.setDescription(mi.getDescription());
-                prev.setItemKitchenTask(mi.getItemKitchenTask());
+                prev.setItemRecipe(mi.getItemRecipe());
                 updatedList.add(prev);
             }
         }
@@ -294,6 +295,13 @@ public class Menu {
         Section sec = getSectionForItem(mi);
         if (sec == null) freeItems.remove(mi);
         else sec.removeItem(mi);
+    }
+
+    public List<MenuItem> getMenuItems() {
+        List<MenuItem> menuItems = new ArrayList<>();
+        for (Section s : sections) menuItems.addAll(s.getItems());
+        menuItems.addAll(freeItems);
+        return menuItems;
     }
 
     // STATIC METHODS FOR PERSISTENCE

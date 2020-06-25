@@ -43,7 +43,7 @@ public class Section {
                 updatedList.add(mi);
             } else {
                 prev.setDescription(mi.getDescription());
-                prev.setItemKitchenTask(mi.getItemKitchenTask());
+                prev.setItemRecipe(mi.getItemRecipe());
                 updatedList.add(prev);
             }
         }
