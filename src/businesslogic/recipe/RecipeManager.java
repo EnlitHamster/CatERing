@@ -6,10 +6,10 @@ import javafx.collections.ObservableList;
 public class RecipeManager {
 
     public RecipeManager() {
-        Recipe.loadAllRecipes();
+        KitchenTask.loadAllTasks();
     }
 
-    public ObservableList<Recipe> getRecipes() {
-        return FXCollections.unmodifiableObservableList(Recipe.getAllRecipes());
+    public ObservableList<KitchenTask> getRecipes() {
+        return FXCollections.unmodifiableObservableList(KitchenTask.getAllTasks());
     }
 }

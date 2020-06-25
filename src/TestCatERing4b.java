@@ -3,7 +3,7 @@ import businesslogic.UseCaseLogicException;
 import businesslogic.menu.Menu;
 import businesslogic.menu.MenuItem;
 import businesslogic.menu.Section;
-import businesslogic.recipe.Recipe;
+import businesslogic.recipe.KitchenTask;
 import javafx.collections.ObservableList;
 
 public class TestCatERing4b {
@@ -16,15 +16,15 @@ public class TestCatERing4b {
             Menu m = CatERing.getInstance().getMenuManager().createMenu("Menu Pinco Pallino");
             Section sec = CatERing.getInstance().getMenuManager().defineSection("Antipasti");
 
-            ObservableList<Recipe> recipes = CatERing.getInstance().getRecipeManager().getRecipes();
+            ObservableList<KitchenTask> kitchenTasks = CatERing.getInstance().getRecipeManager().getRecipes();
             MenuItem[] its = new MenuItem[4];
-            for (int i=0; i < 4 && i < recipes.size(); i++) {
-                its[i] = CatERing.getInstance().getMenuManager().insertItem(recipes.get(i), sec);
+            for (int i = 0; i < 4 && i < kitchenTasks.size(); i++) {
+                its[i] = CatERing.getInstance().getMenuManager().insertItem(kitchenTasks.get(i), sec);
             }
 
             MenuItem[] its2 = new MenuItem[3];
-            for (int i=recipes.size()-1; i > recipes.size()-4 && i >= 0; i--) {
-                its2[recipes.size()-1-i] = CatERing.getInstance().getMenuManager().insertItem(recipes.get(i));
+            for (int i = kitchenTasks.size()-1; i > kitchenTasks.size()-4 && i >= 0; i--) {
+                its2[kitchenTasks.size()-1-i] = CatERing.getInstance().getMenuManager().insertItem(kitchenTasks.get(i));
 
             }
             Section sec1 = CatERing.getInstance().getMenuManager().defineSection("Primi");

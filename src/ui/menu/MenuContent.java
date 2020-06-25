@@ -5,7 +5,7 @@ import businesslogic.UseCaseLogicException;
 import businesslogic.menu.Menu;
 import businesslogic.menu.MenuItem;
 import businesslogic.menu.Section;
-import businesslogic.recipe.Recipe;
+import businesslogic.recipe.KitchenTask;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -198,7 +198,7 @@ public class MenuContent {
 
             stage.showAndWait();
 
-            Optional<Recipe> chosen = controller.getSelectedRecipe();
+            Optional<KitchenTask> chosen = controller.getSelectedKitchenTask();
             Optional<String> desc = controller.getDescription();
             if (chosen.isPresent()) {
                 if (selSection != null) {
