@@ -1,5 +1,6 @@
 package businesslogic.shift;
 
+import businesslogic.kitchen.KitchenJob;
 import businesslogic.user.User;
 
 import java.util.ArrayList;
@@ -25,6 +26,6 @@ public class KitchenShift extends Shift{
         return available;
     }
 
-    public boolean addJob(KitchenJob job){jobs.add(job);}
-    public boolean removeJob(KitchenJob job){jobs.remove(job);}
+    public void addJob(KitchenJob job){jobs.add(job);}
+    public void removeJob(KitchenJob job){jobs.remove(job);}
 }
