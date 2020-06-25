@@ -1,7 +1,7 @@
 package ui.menu;
 
 import businesslogic.CatERing;
-import businesslogic.recipe.Recipe;
+import businesslogic.recipe.KitchenTask;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -15,7 +15,7 @@ public class InsertItemDialog {
     Stage myStage;
 
     @FXML
-    ComboBox<Recipe> recipeCombo;
+    ComboBox<KitchenTask> recipeCombo;
 
     @FXML
     CheckBox descCheck;
@@ -27,7 +27,7 @@ public class InsertItemDialog {
     Button insertButton;
 
     // Results
-    private Recipe selectedRecipe;
+    private KitchenTask selectedKitchenTask;
     private boolean hasDescription;
     private String description;
     private boolean confirmed;
@@ -43,7 +43,7 @@ public class InsertItemDialog {
 
     @FXML
     public void recipeComboSelection() {
-        Recipe sel = recipeCombo.getValue();
+        KitchenTask sel = recipeCombo.getValue();
         descCheck.setDisable(sel == null);
         descField.setDisable(sel == null || !descCheck.isSelected());
         insertButton.setDisable(sel == null);
@@ -63,7 +63,7 @@ public class InsertItemDialog {
     @FXML
     public void aggiungiButtonPressed() {
         confirmed = true;
-        selectedRecipe = recipeCombo.getValue();
+        selectedKitchenTask = recipeCombo.getValue();
         hasDescription = descCheck.isSelected();
         description = descField.getText();
         myStage.close();
@@ -75,9 +75,9 @@ public class InsertItemDialog {
         myStage.close();
     }
 
-    public Optional<Recipe> getSelectedRecipe() {
-        if (!confirmed) selectedRecipe = null;
-        return Optional.ofNullable(selectedRecipe);
+    public Optional<KitchenTask> getSelectedKitchenTask() {
+        if (!confirmed) selectedKitchenTask = null;
+        return Optional.ofNullable(selectedKitchenTask);
     }
 
     public Optional<String> getDescription() {

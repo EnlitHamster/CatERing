@@ -1,6 +1,6 @@
 package businesslogic.menu;
 
-import businesslogic.recipe.Recipe;
+import businesslogic.recipe.KitchenTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import persistence.BatchUpdateHandler;
@@ -16,24 +16,24 @@ import java.util.List;
 public class MenuItem {
     private int id;
     private String description;
-    private Recipe itemRecipe;
+    private KitchenTask itemKitchenTask;
 
     private MenuItem() {}
 
-    public MenuItem(Recipe rec) {
+    public MenuItem(KitchenTask rec) {
         this(rec, rec.getName());
     }
 
-    public MenuItem(Recipe rec, String desc) {
+    public MenuItem(KitchenTask rec, String desc) {
         id = 0;
-        itemRecipe = rec;
+        itemKitchenTask = rec;
         description = desc;
     }
 
     public MenuItem(MenuItem mi) {
         this.id = 0;
         this.description = mi.description;
-        this.itemRecipe = mi.itemRecipe;
+        this.itemKitchenTask = mi.itemKitchenTask;
     }
 
     public int getId() {
@@ -54,12 +54,12 @@ public class MenuItem {
         this.description = description;
     }
 
-    public Recipe getItemRecipe() {
-        return itemRecipe;
+    public KitchenTask getItemKitchenTask() {
+        return itemKitchenTask;
     }
 
-    public void setItemRecipe(Recipe itemRecipe) {
-        this.itemRecipe = itemRecipe;
+    public void setItemKitchenTask(KitchenTask itemKitchenTask) {
+        this.itemKitchenTask = itemKitchenTask;
     }
 
 
@@ -74,7 +74,7 @@ public class MenuItem {
                 ps.setInt(1, menuid);
                 ps.setInt(2, sectionid);
                 ps.setString(3, PersistenceManager.escapeString(items.get(batchCount).description));
-                ps.setInt(4, items.get(batchCount).itemRecipe.getId());
+                ps.setInt(4, items.get(batchCount).itemKitchenTask.getId());
                 ps.setInt(5, batchCount);
             }
 
@@ -91,7 +91,7 @@ public class MenuItem {
                 sectionid +
                 ", " +
                 "'" + PersistenceManager.escapeString(mi.description) + "', " +
-                + mi.itemRecipe.getId() + ", " +
+                + mi.itemKitchenTask.getId() + ", " +
                 + pos + ");";
         PersistenceManager.executeUpdate(itemInsert);
 
@@ -118,7 +118,7 @@ public class MenuItem {
 
         // carico qui le ricette perché non posso innestare due connessioni al DB
         for (int i = 0; i < result.size(); i++) {
-            result.get(i).itemRecipe = Recipe.loadRecipeById(recids.get(i));
+            result.get(i).itemKitchenTask = KitchenTask.loadTaskById(recids.get(i));
         }
 
         return result;

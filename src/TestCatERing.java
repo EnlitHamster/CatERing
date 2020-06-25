@@ -4,7 +4,7 @@ import businesslogic.event.EventInfo;
 import businesslogic.event.ServiceInfo;
 import businesslogic.menu.Menu;
 import businesslogic.menu.Section;
-import businesslogic.recipe.Recipe;
+import businesslogic.recipe.KitchenTask;
 import javafx.collections.ObservableList;
 
 import java.util.Arrays;
@@ -37,14 +37,14 @@ public class TestCatERing {
             System.out.println("");
 
             System.out.println("\nTEST INSERT ITEM IN SECTION");
-            ObservableList<Recipe> recipes = CatERing.getInstance().getRecipeManager().getRecipes();
-            for (int i=0; i < 4 && i < recipes.size(); i++) {
-                CatERing.getInstance().getMenuManager().insertItem(recipes.get(i), sec);
+            ObservableList<KitchenTask> kitchenTasks = CatERing.getInstance().getRecipeManager().getRecipes();
+            for (int i = 0; i < 4 && i < kitchenTasks.size(); i++) {
+                CatERing.getInstance().getMenuManager().insertItem(kitchenTasks.get(i), sec);
             }
 
             System.out.println("\nTEST INSERT FREE ITEM");
-            for (int i=recipes.size()-1; i > recipes.size()-4 && i >= 0; i--) {
-                CatERing.getInstance().getMenuManager().insertItem(recipes.get(i));
+            for (int i = kitchenTasks.size()-1; i > kitchenTasks.size()-4 && i >= 0; i--) {
+                CatERing.getInstance().getMenuManager().insertItem(kitchenTasks.get(i));
             }
             System.out.println(m.testString());
 

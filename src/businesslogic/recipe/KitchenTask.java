@@ -4,20 +4,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import persistence.PersistenceManager;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Recipe {
-    private static final Map<Integer, Recipe> all = new HashMap<>();
+public class KitchenTask {
+    private static final Map<Integer, KitchenTask> all = new HashMap<>();
 
     private int id;
     private String name;
 
-    private Recipe() {}
+    private KitchenTask() {}
 
-    public Recipe(String name) {
+    public KitchenTask(String name) {
         id = 0;
         this.name = name;
     }
@@ -36,38 +35,38 @@ public class Recipe {
 
     // STATIC METHODS FOR PERSISTENCE
 
-    public static ObservableList<Recipe> loadAllRecipes() {
+    public static ObservableList<KitchenTask> loadAllTasks() {
         String query = "SELECT * FROM Recipes";
         PersistenceManager.executeQuery(query, rs -> {
             int id = rs.getInt("id");
             if (all.containsKey(id)) {
-                Recipe rec = all.get(id);
-                rec.name = rs.getString("name");
+                KitchenTask task = all.get(id);
+                task.name = rs.getString("name");
             } else {
-                Recipe rec = new Recipe(rs.getString("name"));
-                rec.id = id;
-                all.put(rec.id, rec);
+                KitchenTask task = new KitchenTask(rs.getString("name"));
+                task.id = id;
+                all.put(task.id, task);
             }
         });
-        ObservableList<Recipe> ret =  FXCollections.observableArrayList(all.values());
-        ret.sort(Comparator.comparing(Recipe::getName));
+        ObservableList<KitchenTask> ret =  FXCollections.observableArrayList(all.values());
+        ret.sort(Comparator.comparing(KitchenTask::getName));
         return ret;
     }
 
-    public static ObservableList<Recipe> getAllRecipes() {
+    public static ObservableList<KitchenTask> getAllTasks() {
         return FXCollections.observableArrayList(all.values());
     }
 
-    public static Recipe loadRecipeById(int id) {
+    public static KitchenTask loadTaskById(int id) {
         if (all.containsKey(id)) return all.get(id);
-        Recipe rec = new Recipe();
+        KitchenTask task = new KitchenTask();
         String query = "SELECT * FROM Recipes WHERE id = " + id;
         PersistenceManager.executeQuery(query, rs -> {
-                rec.name = rs.getString("name");
-                rec.id = id;
-                all.put(rec.id, rec);
+                task.name = rs.getString("name");
+                task.id = id;
+                all.put(task.id, task);
         });
-        return rec;
+        return task;
     }
 
 
