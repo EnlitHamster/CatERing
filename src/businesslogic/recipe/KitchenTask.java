@@ -4,21 +4,25 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import persistence.PersistenceManager;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class KitchenTask {
     private static final Map<Integer, KitchenTask> all = new HashMap<>();
 
     private int id;
     private String name;
+    private List<String> notes;
+    private List<String> tags;
+    private List<Preparation> usedPreparations;
 
     private KitchenTask() {}
 
     public KitchenTask(String name) {
         id = 0;
         this.name = name;
+        notes = new ArrayList<>();
+        tags = new ArrayList<>();
+        usedPreparations = new ArrayList<>();
     }
 
     public String getName() {
@@ -31,6 +35,12 @@ public class KitchenTask {
 
     public String toString() {
         return name;
+    }
+
+    public List<Preparation> getAllUsedPreparations() {
+        List<Preparation> allPreparations = new ArrayList<>(usedPreparations);
+        for (Preparation p : usedPreparations) allPreparations.addAll(p.getAllUsedPreparations());
+        return allPreparations;
     }
 
     // STATIC METHODS FOR PERSISTENCE
