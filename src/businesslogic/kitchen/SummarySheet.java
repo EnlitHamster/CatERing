@@ -4,6 +4,7 @@ import businesslogic.event.ServiceInfo;
 import businesslogic.menu.Menu;
 import businesslogic.menu.MenuItem;
 import businesslogic.recipe.KitchenTask;
+import businesslogic.shift.ShiftManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,14 +17,7 @@ public class SummarySheet {
 
     public SummarySheet(ServiceInfo service) {
         this.service = service;
-        Menu menu = service.getMenu();
-        List<MenuItem> menuItems = menu.getMenuItems();
-        List<KitchenTask> neededTasks = new ArrayList<>();
-        for (MenuItem item : menuItems) {
-            neededTasks.add(item.getItemRecipe());
-            neededTasks.addAll(item.getItemRecipe().getAllUsedPreparations());
-        }
-        jobs = neededTasks.stream()
+        jobs = service.getMenu().getNeededTasks().stream()
                 .map(KitchenJob::new)
                 .collect(Collectors.toList());
     }
@@ -33,7 +27,7 @@ public class SummarySheet {
     }
 
     public void removeJob(KitchenJob job) {
-        // TODO: Integrate w/ ShiftManager if job has shift
+        ShiftManager.getInstance().removeKitchenJob(job);
         jobs.remove(job);
     }
 
@@ -53,6 +47,7 @@ public class SummarySheet {
     }
 
     public void removeAllJobs(Collection<KitchenJob> jobs) {
+        ShiftManager.getInstance().removeAllKitchenJob(jobs);
         this.jobs.removeAll(jobs);
     }
 
@@ -62,9 +57,17 @@ public class SummarySheet {
                 .collect(Collectors.toList());
     }
 
-    public void addJob(KitchenJob job) {
+    public KitchenJob addJob(KitchenTask task) {
+        KitchenJob job = new KitchenJob(task);
         jobs.add(job);
+        return job;
     }
 
-    // TODO: Implement when ShiftManager available
+    public void dispose() {
+        ShiftManager.getInstance().removeAllKitchenJob(jobs);
+    }
+
+    public ServiceInfo getService() {
+        return service;
+    }
 }

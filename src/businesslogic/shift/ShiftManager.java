@@ -43,17 +43,7 @@ public class ShiftManager {
         return shifts;
     }
 
-    public void addKitchenJobToShift(KitchenJob job, KitchenShift shift){
+    public void addKitchenJob(KitchenJob job, KitchenShift shift){
         shift.addJob(job);
     }
-
-    public void removeKitchenJobFromShift(KitchenJob job, KitchenShift shift){
-        shift.removeJob(job);
-    }
-
-
-
-
-
-
 }

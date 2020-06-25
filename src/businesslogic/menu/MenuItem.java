@@ -55,7 +55,7 @@ public class MenuItem {
         this.description = description;
     }
 
-    public KitchenTask getItemRecipe() {
+    public Recipe getItemRecipe() {
         return itemRecipe;
     }
 

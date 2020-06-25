@@ -14,6 +14,7 @@ public class EventInfo implements EventItemInfo {
     private Date dateEnd;
     private int participants;
     private User organizer;
+    private User chef;
 
     private ObservableList<ServiceInfo> services;
 
@@ -28,6 +29,15 @@ public class EventInfo implements EventItemInfo {
 
     public String toString() {
         return name + ": " + dateStart + "-" + dateEnd + ", " + participants + " pp. (" + organizer.getUserName() + ")";
+    }
+
+    public boolean containsService(ServiceInfo service) {
+        return services.contains(service);
+    }
+
+    public boolean isChef(User u) {
+        // TODO: Implement User equals method
+        return chef != null && u != null && chef.getId() == u.getId();
     }
 
     // STATIC METHODS FOR PERSISTENCE

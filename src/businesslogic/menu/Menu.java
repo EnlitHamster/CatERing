@@ -2,6 +2,7 @@ package businesslogic.menu;
 
 import businesslogic.CatERing;
 import businesslogic.recipe.KitchenTask;
+import businesslogic.recipe.Recipe;
 import businesslogic.user.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -134,9 +135,9 @@ public class Menu {
         this.sections.add(new Section("Dessert"));
 
         KitchenTask[] all = CatERing.getInstance().getRecipeManager().getRecipes().toArray(new KitchenTask[0]);
-        freeItems.add(new MenuItem(all[3]));
-        freeItems.add(new MenuItem(all[4]));
-        freeItems.add(new MenuItem(all[5]));
+        freeItems.add(new MenuItem((Recipe) all[3]));
+        freeItems.add(new MenuItem((Recipe) all[4]));
+        freeItems.add(new MenuItem((Recipe) all[5]));
     }
 
 
@@ -146,8 +147,8 @@ public class Menu {
         return sec;
     }
 
-    public MenuItem addItem(KitchenTask kitchenTask, Section sec, String desc) {
-        MenuItem mi = new MenuItem(kitchenTask, desc);
+    public MenuItem addItem(Recipe recipe, Section sec, String desc) {
+        MenuItem mi = new MenuItem(recipe, desc);
         if (sec != null) {
             sec.addItem(mi);
         } else {
@@ -201,6 +202,15 @@ public class Menu {
 
     public ObservableMap<String, Boolean> getFeatures() {
         return FXCollections.unmodifiableObservableMap(this.featuresMap);
+    }
+
+    public List<KitchenTask> getNeededTasks() {
+        List<KitchenTask> neededTasks = new ArrayList<>();
+        for (MenuItem item : getMenuItems()) {
+            neededTasks.add(item.getItemRecipe());
+            neededTasks.addAll(item.getItemRecipe().getAllUsedPreparations());
+        }
+        return neededTasks;
     }
 
     public void updateFreeItems(ObservableList<MenuItem> newItems) {

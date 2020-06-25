@@ -53,8 +53,7 @@ public class KitchenJob {
         this.isComplete = isComplete;
     }
 
-    public void setAssignedCook(User u) throws KitchenJobsException {
-        if (u != null && !u.isCook()) throw new KitchenJobsException();
+    public void setAssignedCook(User u) {
         this.assignedCook = u;
     }
 
