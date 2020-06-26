@@ -30,3 +30,5 @@ out/
 .idea/libraries/commons_text_1_8.xml
 
 .idea/libraries/mysql_connector_java_8_0_20.xml
+
+.idea/sqldialects.xml

@@ -3,8 +3,12 @@ package businesslogic.kitchen;
 import businesslogic.event.ServiceInfo;
 import businesslogic.recipe.KitchenTask;
 import businesslogic.shift.ShiftManager;
+import persistence.BatchUpdateHandler;
 import persistence.PersistenceManager;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -74,9 +78,17 @@ public class SummarySheet {
 
     // STATIC METHODS FOR PERSISTENCE
 
+    public static void saveNewSummarySheet(SummarySheet sheet) {
+        KitchenJob.saveAllNewKitchenJobs(sheet.service.getId(), sheet.jobs);
+    }
+
+    public static void deleteSummarySheet(SummarySheet sheet) {
+        sheet.jobs.forEach(KitchenJob::deleteKitchenJob);
+    }
+
     public static SummarySheet loadSummarySheetByService(ServiceInfo service) {
         List<Integer> jobs = new ArrayList<>();
-        String query = "SELECT id,position FROM KitchenJobs WHERE service = " + service.getID() + " ORDER BY position ASC";
+        String query = "SELECT id,position FROM KitchenJobs WHERE service = " + service.getId() + " ORDER BY position ASC";
         PersistenceManager.executeQuery(query, rs -> jobs.add(rs.getInt("id")));
         if (jobs.size() > 0) {
             SummarySheet sheet = new SummarySheet();
@@ -87,5 +99,21 @@ public class SummarySheet {
             return sheet;
         }
         return null;
+    }
+
+    public static void saveJobsOrder(SummarySheet sheet) {
+        String upd = "UPDATE KitchenJobs SET position = ? WHERE id = ?";
+        PersistenceManager.executeBatchUpdate(upd, sheet.jobs.size(), new BatchUpdateHandler() {
+            @Override
+            public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
+                ps.setInt(1, batchCount);
+                ps.setInt(2, sheet.jobs.get(batchCount).getId());
+            }
+
+            @Override
+            public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
+                // no generated ids to handle
+            }
+        });
     }
 }

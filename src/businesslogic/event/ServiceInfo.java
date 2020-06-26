@@ -33,7 +33,7 @@ public class ServiceInfo implements EventItemInfo {
         summarySheet = null;
     }
 
-    public Integer getID() {
+    public Integer getId() {
         return id;
     }
 
