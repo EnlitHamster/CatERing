@@ -4,6 +4,7 @@ import businesslogic.menu.Menu;
 import businesslogic.menu.MenuException;
 import businesslogic.menu.Section;
 import businesslogic.recipe.KitchenTask;
+import businesslogic.recipe.Recipe;
 import javafx.collections.ObservableList;
 
 public class TestCatERing1b {
@@ -20,11 +21,11 @@ public class TestCatERing1b {
 
             ObservableList<KitchenTask> kitchenTasks = CatERing.getInstance().getRecipeManager().getRecipes();
             for (int i = 0; i < 4 && i < kitchenTasks.size(); i++) {
-                CatERing.getInstance().getMenuManager().insertItem(kitchenTasks.get(i), sec);
+                CatERing.getInstance().getMenuManager().insertItem((Recipe) kitchenTasks.get(i), sec);
             }
 
             for (int i = kitchenTasks.size()-1; i > kitchenTasks.size()-4 && i >= 0; i--) {
-                CatERing.getInstance().getMenuManager().insertItem(kitchenTasks.get(i));
+                CatERing.getInstance().getMenuManager().insertItem((Recipe) kitchenTasks.get(i));
             }
 
             CatERing.getInstance().getMenuManager().publish();

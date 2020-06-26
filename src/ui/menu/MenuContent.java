@@ -6,6 +6,7 @@ import businesslogic.menu.Menu;
 import businesslogic.menu.MenuItem;
 import businesslogic.menu.Section;
 import businesslogic.recipe.KitchenTask;
+import businesslogic.recipe.Recipe;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -203,15 +204,15 @@ public class MenuContent {
             if (chosen.isPresent()) {
                 if (selSection != null) {
                     if (desc.isPresent()) {
-                        CatERing.getInstance().getMenuManager().insertItem(chosen.get(), selSection, desc.get());
+                        CatERing.getInstance().getMenuManager().insertItem((Recipe) chosen.get(), selSection, desc.get());
                     } else {
-                        CatERing.getInstance().getMenuManager().insertItem(chosen.get(), selSection);
+                        CatERing.getInstance().getMenuManager().insertItem((Recipe) chosen.get(), selSection);
                     }
                 } else {
                     if (desc.isPresent()) {
-                        CatERing.getInstance().getMenuManager().insertItem(chosen.get(), desc.get());
+                        CatERing.getInstance().getMenuManager().insertItem((Recipe) chosen.get(), desc.get());
                     } else {
-                        CatERing.getInstance().getMenuManager().insertItem(chosen.get());
+                        CatERing.getInstance().getMenuManager().insertItem((Recipe) chosen.get());
                     }
                 }
             }

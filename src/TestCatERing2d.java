@@ -3,6 +3,7 @@ import businesslogic.UseCaseLogicException;
 import businesslogic.menu.Menu;
 import businesslogic.menu.Section;
 import businesslogic.recipe.KitchenTask;
+import businesslogic.recipe.Recipe;
 import javafx.collections.ObservableList;
 
 public class TestCatERing2d {
@@ -17,10 +18,10 @@ public class TestCatERing2d {
 
             ObservableList<KitchenTask> kitchenTasks = CatERing.getInstance().getRecipeManager().getRecipes();
             for (int i = 0; i < 4 && i < kitchenTasks.size(); i++) {
-                CatERing.getInstance().getMenuManager().insertItem(kitchenTasks.get(i), sec);
+                CatERing.getInstance().getMenuManager().insertItem((Recipe) kitchenTasks.get(i), sec);
             }
             for (int i = kitchenTasks.size()-1; i > kitchenTasks.size()-4 && i >= 0; i--) {
-                CatERing.getInstance().getMenuManager().insertItem(kitchenTasks.get(i));
+                CatERing.getInstance().getMenuManager().insertItem((Recipe) kitchenTasks.get(i));
             }
             Section sec1 = CatERing.getInstance().getMenuManager().defineSection("Primi");
             Section sec2 = CatERing.getInstance().getMenuManager().defineSection("Secondi");

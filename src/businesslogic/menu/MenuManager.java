@@ -3,6 +3,7 @@ package businesslogic.menu;
 import businesslogic.CatERing;
 import businesslogic.UseCaseLogicException;
 import businesslogic.recipe.KitchenTask;
+import businesslogic.recipe.Recipe;
 import businesslogic.user.User;
 import javafx.collections.ObservableList;
 
@@ -47,23 +48,23 @@ public class MenuManager {
         return sec;
     }
 
-    public MenuItem insertItem(KitchenTask kitchenTask, Section sec, String desc) throws UseCaseLogicException {
+    public MenuItem insertItem(Recipe recipe, Section sec, String desc) throws UseCaseLogicException {
         if (this.currentMenu == null) throw new UseCaseLogicException();
         if (sec != null && this.currentMenu.getSectionPosition(sec) < 0) throw new UseCaseLogicException();
-        MenuItem mi = this.currentMenu.addItem(kitchenTask, sec, desc);
+        MenuItem mi = this.currentMenu.addItem(recipe, sec, desc);
         this.notifyMenuItemAdded(mi);
         return mi;
     }
 
-    public MenuItem insertItem(KitchenTask kitchenTask, Section sec) throws UseCaseLogicException {
-        return this.insertItem(kitchenTask, sec, kitchenTask.getName());
+    public MenuItem insertItem(Recipe recipe, Section sec) throws UseCaseLogicException {
+        return this.insertItem(recipe, sec, recipe.getName());
     }
 
-    public MenuItem insertItem(KitchenTask rec) throws UseCaseLogicException {
+    public MenuItem insertItem(Recipe rec) throws UseCaseLogicException {
         return this.insertItem(rec, null, rec.getName());
     }
 
-    public MenuItem insertItem(KitchenTask rec, String desc) throws UseCaseLogicException {
+    public MenuItem insertItem(Recipe rec, String desc) throws UseCaseLogicException {
         return this.insertItem(rec, null, desc);
     }
 
