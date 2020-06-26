@@ -63,16 +63,13 @@ public class MenuList {
             menuListItems = CatERing.getInstance().getMenuManager().getAllMenus();
             menuList.setItems(menuListItems);
             menuList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-            menuList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Menu>() {
-                @Override
-                public void changed(ObservableValue<? extends Menu> observableValue, Menu oldMenu, Menu newMenu) {
-                    User u = CatERing.getInstance().getUserManager().getCurrentUser();
-                    System.out.println(u.getId());
+            menuList.getSelectionModel().selectedItemProperty().addListener((observableValue, oldMenu, newMenu) -> {
+                User u = CatERing.getInstance().getUserManager().getCurrentUser();
+                System.out.println(u.getId());
 
-                    eliminaButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));
-                    apriButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));
-                    copiaButton.setDisable(newMenu == null);
-                }
+                eliminaButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));
+                apriButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));
+                copiaButton.setDisable(newMenu == null);
             });
         } else {
             menuList.refresh();

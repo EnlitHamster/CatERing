@@ -1,7 +1,6 @@
 package businesslogic.shift;
 
 import businesslogic.kitchen.KitchenJob;
-import javafx.collections.transformation.SortedList;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,7 +15,7 @@ public class ShiftManager {
         return instance;
     }
 
-    private List<Shift> shifts;
+    private List<KitchenShift> shifts;
 
     public ShiftManager(){
         shifts = new ArrayList<>();
@@ -40,7 +39,7 @@ public class ShiftManager {
         }
     }
 
-    public List<Shift> getShiftBoard(){
+    public List<KitchenShift> getShiftBoard(){
         return shifts;
     }
 

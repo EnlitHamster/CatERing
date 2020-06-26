@@ -24,11 +24,17 @@ public class ServiceInfo implements EventItemInfo {
     private SummarySheet summarySheet;
     private EventInfo event;
 
+    private ServiceInfo() {}
+
     public ServiceInfo(EventInfo event, String name) {
         this.event = event;
         this.name = name;
         menu = null;
         summarySheet = null;
+    }
+
+    public Integer getID() {
+        return id;
     }
 
     public EventInfo getEvent() {
@@ -61,9 +67,10 @@ public class ServiceInfo implements EventItemInfo {
         ObservableList<ServiceInfo> result = FXCollections.observableArrayList();
         String query = "SELECT id, name, service_date, time_start, time_end, expected_participants " +
                 "FROM Services WHERE event_id = " + event.getID();
+        ServiceInfo serv = new ServiceInfo();
         PersistenceManager.executeQuery(query, rs -> {
-            String s = rs.getString("name");
-            ServiceInfo serv = new ServiceInfo(event, s);
+            serv.event = event;
+            serv.name = rs.getString("name");
             serv.id = rs.getInt("id");
             serv.date = rs.getDate("service_date");
             serv.timeStart = rs.getTime("time_start");
@@ -71,6 +78,7 @@ public class ServiceInfo implements EventItemInfo {
             serv.participants = rs.getInt("expected_participants");
             result.add(serv);
         });
+        serv.summarySheet = SummarySheet.loadSummarySheetByService(serv);
 
         return result;
     }

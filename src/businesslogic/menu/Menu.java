@@ -375,7 +375,7 @@ public class Menu {
 
     private static void featuresToDB(Menu m) {
         // Save features
-        String featureInsert = "INSERT INTO catering.MenuFeatures (menu_id, name, value) VALUES (?, ?, ?)";
+        String featureInsert = "INSERT INTO MenuFeatures (menu_id, name, value) VALUES (?, ?, ?)";
         String[] features = m.featuresMap.keySet().toArray(new String[0]);
         PersistenceManager.executeBatchUpdate(featureInsert, features.length, new BatchUpdateHandler() {
             @Override
@@ -409,7 +409,7 @@ public class Menu {
 
         String del = "DELETE FROM Menus WHERE id = " + m.getId();
         PersistenceManager.executeUpdate(del);
-        loadedMenus.remove(m);
+        loadedMenus.remove(m.getId());
     }
 
     public static ObservableList<Menu> loadAllMenus() {

@@ -3,6 +3,7 @@ package businesslogic.kitchen;
 import businesslogic.event.ServiceInfo;
 import businesslogic.recipe.KitchenTask;
 import businesslogic.shift.ShiftManager;
+import persistence.PersistenceManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,8 +11,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SummarySheet {
-    private final List<KitchenJob> jobs;
-    private final ServiceInfo service;
+    private List<KitchenJob> jobs;
+    private ServiceInfo service;
+
+    private SummarySheet() {}
 
     public SummarySheet(ServiceInfo service) {
         this.service = service;
@@ -67,5 +70,22 @@ public class SummarySheet {
 
     public ServiceInfo getService() {
         return service;
+    }
+
+    // STATIC METHODS FOR PERSISTENCE
+
+    public static SummarySheet loadSummarySheetByService(ServiceInfo service) {
+        List<Integer> jobs = new ArrayList<>();
+        String query = "SELECT id,position FROM KitchenJobs WHERE service = " + service.getID() + " ORDER BY position ASC";
+        PersistenceManager.executeQuery(query, rs -> jobs.add(rs.getInt("id")));
+        if (jobs.size() > 0) {
+            SummarySheet sheet = new SummarySheet();
+            sheet.service = service;
+            sheet.jobs = jobs.stream()
+                    .map(KitchenJob::loadKitchenJobById)
+                    .collect(Collectors.toList());
+            return sheet;
+        }
+        return null;
     }
 }

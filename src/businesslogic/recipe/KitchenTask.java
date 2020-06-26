@@ -6,21 +6,20 @@ import persistence.PersistenceManager;
 
 import java.util.*;
 
-public class KitchenTask {
+public abstract class KitchenTask {
     private static final Map<Integer, KitchenTask> all = new HashMap<>();
 
-    private Integer id;
-    private String name;
-    private List<String> notes;
-    private List<String> tags;
-    private List<Preparation> usedPreparations;
+    protected Integer id;
+    protected String name;
+    protected String notes;
+    protected List<String> tags;
+    protected List<Preparation> usedPreparations;
 
-    private KitchenTask() {}
+    protected KitchenTask() {}
 
     public KitchenTask(String name) {
         id = 0;
         this.name = name;
-        notes = new ArrayList<>();
         tags = new ArrayList<>();
         usedPreparations = new ArrayList<>();
     }
@@ -58,16 +57,26 @@ public class KitchenTask {
     // STATIC METHODS FOR PERSISTENCE
 
     public static ObservableList<KitchenTask> loadAllTasks() {
-        String query = "SELECT * FROM Recipes";
+        String query = "SELECT * FROM KitchenTasks";
         PersistenceManager.executeQuery(query, rs -> {
             int id = rs.getInt("id");
             if (all.containsKey(id)) {
                 KitchenTask task = all.get(id);
                 task.name = rs.getString("name");
             } else {
-                KitchenTask task = new KitchenTask(rs.getString("name"));
+                KitchenTask task;
+                if (rs.getBoolean("is recipe")) task = Recipe.loadRecipe(rs);
+                else task = Preparation.loadPreparation(rs);
                 task.id = id;
                 all.put(task.id, task);
+            }
+        });
+        query = "SELECT * FROM UsedPreparations";
+        PersistenceManager.executeQuery(query, rs -> {
+            int id = rs.getInt("recipe");
+            int pid = rs.getInt("preparation");
+            if (all.containsKey(id) && all.containsKey(pid)) {
+                all.get(id).usedPreparations.add((Preparation) all.get(pid));
             }
         });
         ObservableList<KitchenTask> ret =  FXCollections.observableArrayList(all.values());
@@ -81,14 +90,21 @@ public class KitchenTask {
 
     public static KitchenTask loadTaskById(int id) {
         if (all.containsKey(id)) return all.get(id);
-        KitchenTask task = new KitchenTask();
-        String query = "SELECT * FROM Recipes WHERE id = " + id;
+        var obj = new Object() {
+            KitchenTask task;
+            final List<Integer> preps = new ArrayList<>();
+        };
+        String query = "SELECT * FROM KitchenTasks WHERE id = " + id;
         PersistenceManager.executeQuery(query, rs -> {
-                task.name = rs.getString("name");
-                task.id = id;
-                all.put(task.id, task);
+                if (rs.getBoolean("is recipe")) obj.task = Recipe.loadRecipe(rs);
+                else obj.task = Preparation.loadPreparation(rs);
+                obj.task.id = id;
         });
-        return task;
+        query = "SELECT preparation FROM UsedPreparations WHERE recipe = " + id;
+        PersistenceManager.executeQuery(query, rs -> obj.preps.add(rs.getInt("preparation")));
+        for (Integer pid : obj.preps) obj.task.usedPreparations.add((Preparation) loadTaskById(pid));
+        all.put(obj.task.id, obj.task);
+        return obj.task;
     }
 
 

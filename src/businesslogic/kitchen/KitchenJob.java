@@ -3,14 +3,24 @@ package businesslogic.kitchen;
 import businesslogic.recipe.KitchenTask;
 import businesslogic.shift.KitchenShift;
 import businesslogic.user.User;
+import persistence.PersistenceManager;
+
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 public class KitchenJob {
+    private static final Map<Integer, KitchenJob> loadedJobs = new HashMap<>();
+
+    private Integer id; // TODO: add persistence method for save with id update (see Menu)
     private Long timeEstimate;
     private Integer quantity;
     private boolean isComplete;
     private User assignedCook;
     private KitchenShift shift;
-    private final KitchenTask itemTask;
+    private KitchenTask itemTask;
+
+    private KitchenJob() {}
 
     public KitchenJob(KitchenTask kt) {
         itemTask = kt;
@@ -18,6 +28,8 @@ public class KitchenJob {
         assignedCook = null;
         shift = null;
     }
+
+    public Integer getId() {return id;}
 
     public Long getTimeEstimate() {
         return timeEstimate;
@@ -67,5 +79,48 @@ public class KitchenJob {
 
     public boolean hasShift() {
         return shift != null;
+    }
+
+    // STATIC METHODS FOR PERSISTENCE
+
+    public static KitchenJob loadKitchenJobFromShift(KitchenShift shift, Integer id) {
+        if (loadedJobs.containsKey(id)) return loadedJobs.get(id);
+        String query = "SELECT * FROM KitchenJobs WHERE id = " + id;
+        var obj = new Object() {Integer tid, uid;};
+        KitchenJob job = new KitchenJob();
+        job.id = id;
+        PersistenceManager.executeQuery(query, rs -> {
+            job.timeEstimate = rs.getLong("time estimate");
+            job.quantity = rs.getInt("quantity");
+            job.isComplete = rs.getBoolean("is complete");
+            obj.uid = rs.getInt("assigned cook");
+            obj.tid = rs.getInt("item task");
+        });
+        job.assignedCook = User.loadUserById(obj.uid);
+        job.shift = shift;
+        job.itemTask = KitchenTask.loadTaskById(obj.tid);
+        loadedJobs.put(job.id, job);
+        return job;
+    }
+
+    public static KitchenJob loadKitchenJobById(Integer id) {
+        if (loadedJobs.containsKey(id)) return loadedJobs.get(id);
+        String query = "SELECT * FROM KitchenJobs WHERE id = " + id;
+        var obj = new Object() {Integer tid, uid; Timestamp date;};
+        KitchenJob job = new KitchenJob();
+        job.id = id;
+        PersistenceManager.executeQuery(query, rs -> {
+            job.timeEstimate = rs.getLong("time estimate");
+            job.quantity = rs.getInt("quantity");
+            job.isComplete = rs.getBoolean("is complete");
+            obj.uid = rs.getInt("assigned cook");
+            obj.date = rs.getTimestamp("shift");
+            obj.tid = rs.getInt("item task");
+        });
+        job.assignedCook = User.loadUserById(obj.uid);
+        job.shift = KitchenShift.loadKitchenShiftFromJob(id, obj.date);
+        job.itemTask = KitchenTask.loadTaskById(obj.tid);
+        loadedJobs.put(job.id, job);
+        return job;
     }
 }

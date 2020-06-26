@@ -68,7 +68,7 @@ public class MenuItem {
     // STATIC METHODS FOR PERSISTENCE
 
     public static void saveAllNewItems(int menuid, int sectionid, List<MenuItem> items) {
-        String itemInsert = "INSERT INTO catering.MenuItems (menu_id, section_id, description, recipe_id, position) VALUES (?, ?, ?, ?, ?);";
+        String itemInsert = "INSERT INTO MenuItems (menu_id, section_id, description, recipe_id, position) VALUES (?, ?, ?, ?, ?);";
         PersistenceManager.executeBatchUpdate(itemInsert, items.size(), new BatchUpdateHandler() {
             @Override
             public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
@@ -86,7 +86,7 @@ public class MenuItem {
         });
     }
     public static void saveNewItem(int menuid, int sectionid, MenuItem mi, int pos) {
-        String itemInsert = "INSERT INTO catering.MenuItems (menu_id, section_id, description, recipe_id, position) VALUES (" +
+        String itemInsert = "INSERT INTO MenuItems (menu_id, section_id, description, recipe_id, position) VALUES (" +
                 menuid +
                 ", " +
                 sectionid +

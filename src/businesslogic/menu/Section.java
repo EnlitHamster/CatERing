@@ -108,7 +108,7 @@ public class Section {
 
     // STATIC METHODS FOR PERSISTENCE
     public static void saveNewSection(int menuid, Section sec, int posInMenu) {
-        String secInsert = "INSERT INTO catering.MenuSections (menu_id, name, position) VALUES (" +
+        String secInsert = "INSERT INTO MenuSections (menu_id, name, position) VALUES (" +
                 menuid + ", " +
                 "'" + PersistenceManager.escapeString(sec.name) + "', " +
                 posInMenu +
@@ -122,7 +122,7 @@ public class Section {
     }
 
     public static void saveAllNewSections(int menuid, List<Section> sections) {
-        String secInsert = "INSERT INTO catering.MenuSections (menu_id, name, position) VALUES (?, ?, ?);";
+        String secInsert = "INSERT INTO MenuSections (menu_id, name, position) VALUES (?, ?, ?);";
         PersistenceManager.executeBatchUpdate(secInsert, sections.size(), new BatchUpdateHandler() {
             @Override
             public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {

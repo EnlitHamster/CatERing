@@ -2,20 +2,35 @@ package businesslogic.shift;
 
 import businesslogic.kitchen.KitchenJob;
 import businesslogic.user.User;
+import persistence.PersistenceManager;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-public class KitchenShift extends Shift{
+public class KitchenShift implements Comparable<KitchenShift> {
+    protected Date date;
     private boolean isComplete;
-    private List<KitchenJob> jobs;
-    private List<User> availableCooks;
+    private final List<KitchenJob> jobs;
+    private final List<User> availableCooks;
 
-    public KitchenShift(Calendar date){
-        super(date);
-        jobs = new ArrayList<KitchenJob>();
-        availableCooks = new ArrayList<User>();
+    private KitchenShift() {
+        jobs = new ArrayList<>();
+        availableCooks = new ArrayList<>();
+    }
+
+    public KitchenShift(Date date){
+        this.date = date;
+        jobs = new ArrayList<>();
+        availableCooks = new ArrayList<>();
+    }
+
+    public Date getDate(){return date;}
+
+    @Override
+    public int compareTo(KitchenShift o) {
+        return date.compareTo(o.date);
     }
 
     public boolean isAvailable(User cook){
@@ -31,5 +46,26 @@ public class KitchenShift extends Shift{
 
     public void setComplete(boolean b) {
         isComplete = b;
+    }
+
+    // STATIC METHODS FOR PERSISTENCE
+
+    public static KitchenShift loadKitchenShiftFromJob(Integer jobId, Timestamp id) {
+        String query = "SELECT * FROM KitchenShifts WHERE date = " + id;
+        KitchenShift shift = new KitchenShift();
+        PersistenceManager.executeQuery(query, rs -> {
+            shift.date = Date.from(id.toInstant());
+            shift.isComplete = rs.getBoolean("is complete");
+        });
+        query = "SELECT cook FROM ShiftAvailableCooks WHERE shift = " + id;
+        List<Integer> ids = new ArrayList<>();
+        PersistenceManager.executeQuery(query, rs -> ids.add(rs.getInt("cook")));
+        for (Integer uid : ids) shift.availableCooks.add(User.loadUserById(uid));
+        query = "SELECT id FROM KitchenJobs WHERE shift = " + id;
+        ids.clear();
+        PersistenceManager.executeQuery(query, rs -> ids.add(rs.getInt("id")));
+        ids.remove(jobId);
+        for (Integer jid : ids) shift.jobs.add(KitchenJob.loadKitchenJobFromShift(shift, jid));
+        return shift;
     }
 }
