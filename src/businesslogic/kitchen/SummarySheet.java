@@ -1,8 +1,6 @@
 package businesslogic.kitchen;
 
 import businesslogic.event.ServiceInfo;
-import businesslogic.menu.Menu;
-import businesslogic.menu.MenuItem;
 import businesslogic.recipe.KitchenTask;
 import businesslogic.shift.ShiftManager;
 
@@ -12,8 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SummarySheet {
-    private List<KitchenJob> jobs;
-    private ServiceInfo service;
+    private final List<KitchenJob> jobs;
+    private final ServiceInfo service;
 
     public SummarySheet(ServiceInfo service) {
         this.service = service;

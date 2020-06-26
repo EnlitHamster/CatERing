@@ -28,4 +28,8 @@ public class KitchenShift extends Shift{
 
     public void addJob(KitchenJob job){jobs.add(job);}
     public void removeJob(KitchenJob job){jobs.remove(job);}
+
+    public void setComplete(boolean b) {
+        isComplete = b;
+    }
 }

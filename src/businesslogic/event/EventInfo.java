@@ -8,11 +8,11 @@ import persistence.PersistenceManager;
 import java.sql.Date;
 
 public class EventInfo implements EventItemInfo {
-    private int id;
+    private Integer id;
     private String name;
     private Date dateStart;
     private Date dateEnd;
-    private int participants;
+    private Integer participants;
     private User organizer;
     private User chef;
 
@@ -21,6 +21,10 @@ public class EventInfo implements EventItemInfo {
     public EventInfo(String name) {
         this.name = name;
         id = 0;
+    }
+
+    public Integer getID() {
+        return id;
     }
 
     public ObservableList<ServiceInfo> getServices() {
@@ -36,7 +40,6 @@ public class EventInfo implements EventItemInfo {
     }
 
     public boolean isChef(User u) {
-        // TODO: Implement User equals method
         return chef != null && u != null && chef.getId() == u.getId();
     }
 
@@ -58,7 +61,7 @@ public class EventInfo implements EventItemInfo {
         });
 
         for (EventInfo e : all) {
-            e.services = ServiceInfo.loadServiceInfoForEvent(e.id);
+            e.services = ServiceInfo.loadServiceInfoForEvent(e);
         }
         return all;
     }

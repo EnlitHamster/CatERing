@@ -2,7 +2,6 @@ package businesslogic.kitchen;
 
 import businesslogic.CatERing;
 import businesslogic.UseCaseLogicException;
-import businesslogic.event.EventInfo;
 import businesslogic.event.ServiceInfo;
 import businesslogic.recipe.KitchenTask;
 import businesslogic.shift.KitchenShift;
@@ -20,27 +19,28 @@ public class KitchenJobsManager {
         eventReceivers = new ArrayList<>();
     }
 
-    public SummarySheet createSummarySheet(EventInfo event, ServiceInfo service) throws UseCaseLogicException, KitchenJobsException {
+    public SummarySheet createSummarySheet(ServiceInfo service) throws UseCaseLogicException, KitchenJobsException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
-        if (!user.isChef() || !event.containsService(service)) throw new UseCaseLogicException();
-        if (!event.isChef(user) || service.hasSummarySheet()) throw new KitchenJobsException();
+        if (!user.isChef()) throw new UseCaseLogicException();
+        if (!service.getEvent().isChef(user) || service.hasSummarySheet()) throw new KitchenJobsException();
         currentSummarySheet = new SummarySheet(service);
         return currentSummarySheet;
     }
 
-    public void selectSummarySheet(EventInfo event, ServiceInfo service) throws UseCaseLogicException, KitchenJobsException {
+    public void selectSummarySheet(ServiceInfo service) throws UseCaseLogicException, KitchenJobsException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
-        if (!user.isChef() || !event.containsService(service)) throw new UseCaseLogicException();
-        if (!event.isChef(user) || service.hasSummarySheet()) throw new KitchenJobsException();
+        if (!user.isChef()) throw new UseCaseLogicException();
+        if (!service.getEvent().isChef(user) || service.hasSummarySheet()) throw new KitchenJobsException();
         currentSummarySheet = service.getSummarySheet();
     }
 
-    public void deleteSummarySheet(EventInfo event, ServiceInfo service) throws UseCaseLogicException, KitchenJobsException {
+    public void deleteSummarySheet(ServiceInfo service) throws UseCaseLogicException, KitchenJobsException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
-        if (!user.isChef() || !event.containsService(service)) throw new UseCaseLogicException();
-        if (!event.isChef(user) || !service.hasSummarySheet()) throw new KitchenJobsException();
+        if (!user.isChef()) throw new UseCaseLogicException();
+        if (!service.getEvent().isChef(user) || !service.hasSummarySheet()) throw new KitchenJobsException();
         SummarySheet summarySheet = service.getSummarySheet();
         summarySheet.dispose();
+        service.setSummarySheet(null);
     }
 
     public void addTask(KitchenTask task) throws UseCaseLogicException {
@@ -86,5 +86,18 @@ public class KitchenJobsManager {
         if (currentSummarySheet == null || !currentSummarySheet.containsJob(job)) throw new UseCaseLogicException();
         if (time != null) job.setTimeEstimate(time);
         if (quantity != null) job.setQuantity(quantity);
+    }
+
+    public List<KitchenShift> getKitchenShiftBoard() {
+        return ShiftManager.getInstance().getKitchenShiftBoard();
+    }
+
+    public void setJobCompleted(KitchenJob job) throws UseCaseLogicException {
+        if (currentSummarySheet == null || !currentSummarySheet.containsJob(job)) throw new UseCaseLogicException();
+        job.setComplete();
+    }
+
+    public void setShiftComplete(KitchenShift shift, boolean complete) {
+        ShiftManager.getInstance().setKitchenShiftComplete(shift, complete);
     }
 }

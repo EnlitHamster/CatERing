@@ -50,6 +50,11 @@ public class KitchenTask {
         else return false;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
     // STATIC METHODS FOR PERSISTENCE
 
     public static ObservableList<KitchenTask> loadAllTasks() {

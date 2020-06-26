@@ -49,8 +49,8 @@ public class KitchenJob {
         this.quantity = quantity;
     }
 
-    public void setComplete(boolean isComplete) {
-        this.isComplete = isComplete;
+    public void setComplete() {
+        this.isComplete = true;
     }
 
     public void setAssignedCook(User u) {
