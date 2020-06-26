@@ -27,3 +27,6 @@ out/
 .idea/inspectionProfiles/Project_Default.xml
 .idea/libraries/lib.xml
 .idea/dictionaries/sandr.xml
+.idea/libraries/commons_text_1_8.xml
+
+.idea/libraries/mysql_connector_java_8_0_20.xml
