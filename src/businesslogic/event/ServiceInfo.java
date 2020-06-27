@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.List;
 
 public class ServiceInfo implements EventItemInfo {
     private int id;
@@ -68,7 +69,7 @@ public class ServiceInfo implements EventItemInfo {
         String query = "SELECT id, name, service_date, time_start, time_end, expected_participants, approved_menu_id " +
                 "FROM Services WHERE event_id = " + event.getID();
         ServiceInfo serv = new ServiceInfo();
-        var obj = new Object() {Integer mid;};
+        var obj = new Object() {List<Integer> mids;};
         PersistenceManager.executeQuery(query, rs -> {
             serv.event = event;
             serv.name = rs.getString("name");
@@ -77,10 +78,11 @@ public class ServiceInfo implements EventItemInfo {
             serv.timeStart = rs.getTime("time_start");
             serv.timeEnd = rs.getTime("time_end");
             serv.participants = rs.getInt("expected_participants");
-            obj.mid = rs.getInt("approved_menu_id");
+            obj.mids.add(rs.getInt("approved_menu_id"));
             result.add(serv);
         });
-        if (obj.mid != 0) serv.menu = Menu.loadMenuById(obj.mid);
+        for (int i = 0; i < result.size(); ++i)
+            if (obj.mids.get(i) != 0) result.get(i).menu = Menu.loadMenuById(obj.mids.get(i));
         serv.summarySheet = SummarySheet.loadSummarySheetByService(serv);
 
         return result;
