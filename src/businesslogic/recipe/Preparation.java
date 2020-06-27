@@ -9,7 +9,9 @@ public class Preparation extends KitchenTask {
         super(name);
     }
 
-    private Preparation() {}
+    private Preparation() {
+        super();
+    }
 
     public static Preparation loadPreparation(ResultSet rs) throws SQLException {
         Preparation prep = new Preparation();

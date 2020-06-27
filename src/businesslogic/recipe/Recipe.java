@@ -9,7 +9,9 @@ public class Recipe extends KitchenTask {
         super(name);
     }
 
-    private Recipe() {}
+    private Recipe() {
+        super();
+    }
 
     public static Recipe loadRecipe(ResultSet rs) throws SQLException {
         Recipe rec = new Recipe();
