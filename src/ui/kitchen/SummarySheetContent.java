@@ -1,16 +1,25 @@
 package ui.kitchen;
 
+import businesslogic.CatERing;
+import businesslogic.kitchen.SummarySheet;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import ui.menu.MenuManagement;
+
 
 public class SummarySheetContent {
     KitchenManagement kitchenManagementController;
 
-    public void initialize() {
-        /*Menu toview = CatERing.getInstance().getMenuManager().getCurrentMenu();
-        if (toview != null) {
-            titleLabel.setText(toview.getTitle());
+    @FXML Label serviceLabel;
+    @FXML ListView jobList;
 
-            sectionList.setItems(toview.getSections());
+    public void initialize() {
+        SummarySheet toview = CatERing.getInstance().getKitchenManager().getCurrentSummarySheet();
+        if (toview != null) {
+            serviceLabel.setText(toview.getService().getName());
+            jobList.setItems(toview.get());
         }
 
         sectionList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -78,10 +87,14 @@ public class SummarySheetContent {
         centralPane.add(emptyPane, 1, 0);
         paneVisible = false;
 
-        freeItemsToggle.setSelected(false);*/
+        freeItemsToggle.setSelected(false);
     }
 
     public void setMenuManagementController(KitchenManagement kitchenManagement) {
         kitchenManagementController = kitchenManagement;
+    }
+
+    public void exitButtonPressed(ActionEvent actionEvent) {
+        kitchenManagementController.showSummarySheetList();
     }
 }

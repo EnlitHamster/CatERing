@@ -49,4 +49,7 @@ public class KitchenManagement {
     }
 
 
+    public void showSummarySheetList() {
+        containerPane.setCenter(summarySheetListPane);
+    }
 }
