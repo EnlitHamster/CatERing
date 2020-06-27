@@ -22,9 +22,10 @@ public class SummarySheet {
 
     public SummarySheet(ServiceInfo service) {
         this.service = service;
-        jobs = service.getMenu().getNeededTasks().stream()
-                .map(KitchenJob::new)
-                .collect(Collectors.toList());
+        if (service.getMenu() != null)
+            jobs = service.getMenu().getNeededTasks().stream()
+                    .map(KitchenJob::new)
+                    .collect(Collectors.toList());
     }
 
     public boolean containsJob(KitchenJob job) {
