@@ -49,6 +49,21 @@ public class KitchenShift implements Comparable<KitchenShift> {
     }
 
     // STATIC METHODS FOR PERSISTENCE
+    public static void saveJobAssigned(KitchenJob j){
+        String query =
+                "UPDATE KitchenJobs " +
+                "SET shift = " + j.getShift() +
+                "WHERE id = " + j.getId();
+        PersistenceManager.executeUpdate(query);
+    }
+
+    public static void deleteJobAssignment(KitchenJob j){
+        String query =
+                "UPDATE KitchenShifts " +
+                "SET shift = NULL " +
+                "WHERE id = " + j.getId();
+        PersistenceManager.executeUpdate(query);
+    }
 
     public static KitchenShift loadKitchenShiftFromJob(Integer jobId, Timestamp id) {
         String query = "SELECT * FROM KitchenShifts WHERE date = " + id;

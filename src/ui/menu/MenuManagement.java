@@ -45,7 +45,6 @@ public class MenuManagement {
             String uname = CatERing.getInstance().getUserManager().getCurrentUser().getUserName();
             userLabel.setText(uname);
         }
-
         menuListPaneController.setParent(this);
     }
 
@@ -61,7 +60,7 @@ public class MenuManagement {
     }
 
     public void endMenuManagement() {
-        mainPaneController.showStartPane();
+        mainPaneController.showStartPane(containerPane);
     }
 
     public void setMainPaneController(Main main) {

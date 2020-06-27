@@ -8,6 +8,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
+import ui.kitchen.KitchenManagement;
 import ui.menu.MenuManagement;
 
 import java.io.IOException;
@@ -26,14 +27,20 @@ public class Main {
     BorderPane menuManagementPane;
     MenuManagement menuManagementPaneController;
 
+    BorderPane kitchenManagementPane;
+    KitchenManagement kitchenManagementPaneController;
+
     public void initialize() {
         startPaneController.setParent(this);
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("menu/menu-management.fxml"));
+        FXMLLoader menuManagementLoader = new FXMLLoader(getClass().getResource("menu/menu-management.fxml"));
+        FXMLLoader kitchenManagementLoader = new FXMLLoader(getClass().getResource("kitchen/summarySheet-management.fxml"));
         try {
-            menuManagementPane = loader.load();
-            menuManagementPaneController = loader.getController();
+            menuManagementPane = menuManagementLoader.load();
+            menuManagementPaneController = menuManagementLoader.getController();
             menuManagementPaneController.setMainPaneController(this);
+            kitchenManagementPane = kitchenManagementLoader.load();
+            kitchenManagementPaneController = kitchenManagementLoader.getController();
+            kitchenManagementPaneController.setMainPaneController(this);
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -42,7 +49,7 @@ public class Main {
     }
 
     public void startMenuManagement() {
-        CatERing.getInstance().getUserManager().fakeLogin("Lidia");
+        CatERing.getInstance().getUserManager().fakeLogin("Tony");
 
         menuManagementPaneController.initialize();
         paneContainer.getChildren().remove(startPane);
@@ -51,12 +58,23 @@ public class Main {
         AnchorPane.setBottomAnchor(menuManagementPane, 0.0);
         AnchorPane.setLeftAnchor(menuManagementPane, 0.0);
         AnchorPane.setRightAnchor(menuManagementPane, 0.0);
-
     }
 
-    public void showStartPane() {
+    public void startKitchenManagement(){
+        CatERing.getInstance().getUserManager().fakeLogin("Tony");
+
+        kitchenManagementPaneController.initialize();
+        paneContainer.getChildren().remove(startPane);
+        paneContainer.getChildren().add(kitchenManagementPane);
+        AnchorPane.setTopAnchor(kitchenManagementPane, 0.0);
+        AnchorPane.setBottomAnchor(kitchenManagementPane, 0.0);
+        AnchorPane.setLeftAnchor(kitchenManagementPane, 0.0);
+        AnchorPane.setRightAnchor(kitchenManagementPane, 0.0);
+    }
+
+    public void showStartPane(Pane toRemove) {
         startPaneController.initialize();
-        paneContainer.getChildren().remove(menuManagementPane);
+        paneContainer.getChildren().remove(toRemove);
         paneContainer.getChildren().add(startPane);
     }
 }

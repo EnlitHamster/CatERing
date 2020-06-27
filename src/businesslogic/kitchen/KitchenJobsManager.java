@@ -7,6 +7,7 @@ import businesslogic.recipe.KitchenTask;
 import businesslogic.shift.KitchenShift;
 import businesslogic.shift.ShiftManager;
 import businesslogic.user.User;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,10 @@ public class KitchenJobsManager {
 
     public KitchenJobsManager() {
         eventReceivers = new ArrayList<>();
+    }
+
+    public ObservableList<SummarySheet> getAllSummarySheet(){
+        SummarySheet.loadAllSummarySheets();
     }
 
     public SummarySheet createSummarySheet(ServiceInfo service) throws UseCaseLogicException, KitchenJobsException {
