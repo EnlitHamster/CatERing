@@ -17,7 +17,7 @@ import java.util.Map;
 public class KitchenJob {
     private static final Map<Integer, KitchenJob> loadedJobs = new HashMap<>();
 
-    private Integer id; // TODO: add persistence method for save with id update (see Menu)
+    private Integer id;
     private Long timeEstimate;
     private Integer quantity;
     private boolean isComplete;
@@ -138,26 +138,26 @@ public class KitchenJob {
         loadedJobs.put(job.id, job);
     }
 
-    public static void saveAssignment(Integer jobId, Timestamp shiftId, Integer cookId) {
-        String upd = "UPDATE KitchenJobs SET shift = '" + shiftId + "', cook = '" + cookId + "'" +
-                " WHERE id = " + jobId;
+    public static void saveAssignment(KitchenJob job) {
+        String upd = "UPDATE KitchenJobs SET cook = " + (job.assignedCook == null ? "NULL" : "'" + job.assignedCook.getId() + "'") +
+                " WHERE id = " + job.id;
         PersistenceManager.executeUpdate(upd);
     }
 
-    public static void saveUnassignment(Integer jobId) {
-        String upd = "UPDATE KitchenJobs SET shift = NULL, cook = NULL" +
-                " WHERE id = " + jobId;
+    public static void saveUnassignment(KitchenJob job) {
+        String upd = "UPDATE KitchenJobs SET cook = NULL" +
+                " WHERE id = " + job.id;
         PersistenceManager.executeUpdate(upd);
     }
 
-    public static void saveInfoAssignment(Integer jobId, Long timeEstimate, Integer quantity) {
-        String upd = "UPDATE KitchenJobs SET time estimate = '" + timeEstimate + "', quantity = '" + quantity + "'" +
-                " WHERE id = " + jobId;
+    public static void saveInfoAssignment(KitchenJob job) {
+        String upd = "UPDATE KitchenJobs SET time estimate = '" + job.timeEstimate + "', quantity = '" + job.quantity + "'" +
+                " WHERE id = " + job.id;
         PersistenceManager.executeUpdate(upd);
     }
 
-    public static void saveJobCompleted(Integer jobId) {
-        String upd = "UPDATE KitchenJobs SET is complete = " + true + " WHERE id = " + jobId;
+    public static void saveJobCompleted(KitchenJob job) {
+        String upd = "UPDATE KitchenJobs SET is complete = " + true + " WHERE id = " + job.id;
         PersistenceManager.executeUpdate(upd);
     }
 

@@ -6,11 +6,10 @@ import persistence.PersistenceManager;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class KitchenShift implements Comparable<KitchenShift> {
-    protected Date date;
+    protected Timestamp date;
     private boolean isComplete;
     private final List<KitchenJob> jobs;
     private final List<User> availableCooks;
@@ -20,13 +19,13 @@ public class KitchenShift implements Comparable<KitchenShift> {
         availableCooks = new ArrayList<>();
     }
 
-    public KitchenShift(Date date){
+    public KitchenShift(Timestamp date){
         this.date = date;
         jobs = new ArrayList<>();
         availableCooks = new ArrayList<>();
     }
 
-    public Date getDate(){return date;}
+    public Timestamp getDate(){return date;}
 
     @Override
     public int compareTo(KitchenShift o) {
@@ -49,6 +48,7 @@ public class KitchenShift implements Comparable<KitchenShift> {
     }
 
     // STATIC METHODS FOR PERSISTENCE
+
     public static void saveJobAssigned(KitchenJob j){
         String query =
                 "UPDATE KitchenJobs " +
@@ -59,7 +59,7 @@ public class KitchenShift implements Comparable<KitchenShift> {
 
     public static void deleteJobAssignment(KitchenJob j){
         String query =
-                "UPDATE KitchenShifts " +
+                "UPDATE KitchenJobs " +
                 "SET shift = NULL " +
                 "WHERE id = " + j.getId();
         PersistenceManager.executeUpdate(query);
@@ -69,7 +69,7 @@ public class KitchenShift implements Comparable<KitchenShift> {
         String query = "SELECT * FROM KitchenShifts WHERE date = " + id;
         KitchenShift shift = new KitchenShift();
         PersistenceManager.executeQuery(query, rs -> {
-            shift.date = Date.from(id.toInstant());
+            shift.date = id;
             shift.isComplete = rs.getBoolean("is complete");
         });
         query = "SELECT cook FROM ShiftAvailableCooks WHERE shift = " + id;

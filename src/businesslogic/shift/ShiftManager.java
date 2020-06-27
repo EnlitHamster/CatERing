@@ -1,6 +1,7 @@
 package businesslogic.shift;
 
 import businesslogic.kitchen.KitchenJob;
+import businesslogic.kitchen.KitchenJobsEventReceiver;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,17 +17,23 @@ public class ShiftManager {
     }
 
     private List<KitchenShift> shifts;
+    private final List<ShiftEventReceiver> eventReceivers;
 
     public ShiftManager(){
         shifts = new ArrayList<>();
+        eventReceivers = new ArrayList<>();
     }
 
-    private void notifyKitchenJobRemoved(KitchenJob job){
-        //to implement
+    private void notifyKitchenJobRemoved(KitchenJob job) {
+        for (ShiftEventReceiver er : eventReceivers) {
+            er.updateKitchenJobRemoved(job);
+        }
     }
 
-    private void notifyKitchenJobAdded(KitchenJob job){
-        //to implement
+    private void notifyKitchenJobAdded(KitchenJob job) {
+        for (ShiftEventReceiver er : eventReceivers) {
+            er.updateKitchenJobAdded(job);
+        }
     }
 
     public void removeKitchenJob(KitchenJob job){
@@ -44,10 +51,7 @@ public class ShiftManager {
     }
 
     public List<KitchenShift> getKitchenShiftBoard() {
-        return shifts.stream()
-                .filter(KitchenShift.class::isInstance)
-                .map(KitchenShift.class::cast)
-                .collect(Collectors.toList());
+        return shifts;
     }
 
     public void setKitchenShiftComplete(KitchenShift shift, boolean complete) {
@@ -56,5 +60,13 @@ public class ShiftManager {
 
     public void addKitchenJob(KitchenJob job, KitchenShift shift){
         shift.addJob(job);
+    }
+
+    public void addEventReceiver(ShiftEventReceiver rec) {
+        this.eventReceivers.add(rec);
+    }
+
+    public void removeEventReceiver(ShiftEventReceiver rec) {
+        this.eventReceivers.remove(rec);
     }
 }
