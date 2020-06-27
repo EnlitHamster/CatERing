@@ -42,4 +42,11 @@ public class KitchenManagement {
         }
         summarySheetListPaneController.setParent(this);
     }
+
+    public void showCurrentSummarySheet() {
+        summarySheetContentPaneController.initialize();
+        containerPane.setCenter(summarySheetContentPane);
+    }
+
+
 }

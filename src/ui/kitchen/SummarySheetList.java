@@ -1,8 +1,10 @@
 package ui.kitchen;
 
 import businesslogic.CatERing;
+import businesslogic.UseCaseLogicException;
 import businesslogic.event.EventInfo;
 import businesslogic.event.ServiceInfo;
+import businesslogic.kitchen.KitchenJobsException;
 import businesslogic.kitchen.SummarySheet;
 import businesslogic.menu.Menu;
 import businesslogic.user.User;
@@ -36,6 +38,21 @@ public class SummarySheetList {
     @FXML public void endButtonPressed(){
         System.out.println("." + kitchenManagementController);
         kitchenManagementController.endKitchenManagement();
+    }
+
+    @FXML
+    public void newButtonPressed() {
+        ServiceInfo currentService = summarySheetList.getSelectionModel().getSelectedItem();
+        try{
+            SummarySheet s = CatERing.getInstance().getKitchenManager().createSummarySheet(currentService);
+        }
+        catch (UseCaseLogicException e) {
+            e.printStackTrace();
+        }
+        catch (KitchenJobsException e) {
+            e.printStackTrace();
+        }
+        kitchenManagementController.showCurrentSummarySheet();
     }
 
     public void initialize() {

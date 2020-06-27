@@ -56,7 +56,9 @@ public class EventInfo implements EventItemInfo {
             e.dateEnd = rs.getDate("date_end");
             e.participants = rs.getInt("expected_participants");
             int org = rs.getInt("organizer_id");
+            int chefId = rs.getInt("chef");
             e.organizer = User.loadUserById(org);
+            e.chef = User.loadUserById(chefId);
             all.add(e);
         });
 
