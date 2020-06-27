@@ -156,6 +156,11 @@ public class KitchenJob {
         PersistenceManager.executeUpdate(upd);
     }
 
+    public static void saveJobCompleted(Integer jobId) {
+        String upd = "UPDATE KitchenJobs SET is complete = " + true + " WHERE id = " + jobId;
+        PersistenceManager.executeUpdate(upd);
+    }
+
     public static KitchenJob loadKitchenJobFromShift(KitchenShift shift, Integer id) {
         if (loadedJobs.containsKey(id)) return loadedJobs.get(id);
         String query = "SELECT * FROM KitchenJobs WHERE id = " + id;
