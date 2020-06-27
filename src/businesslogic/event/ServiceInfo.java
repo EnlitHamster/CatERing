@@ -71,7 +71,7 @@ public class ServiceInfo implements EventItemInfo {
         String query = "SELECT id, name, service_date, time_start, time_end, expected_participants, approved_menu_id " +
                 "FROM Services WHERE event_id = " + event.getID();
         ServiceInfo serv = new ServiceInfo();
-        var obj = new Object() {List<Integer> mids;};
+        var obj = new Object() {List<Integer> mids = new ArrayList<>();};
         PersistenceManager.executeQuery(query, rs -> {
             serv.event = event;
             serv.name = rs.getString("name");
