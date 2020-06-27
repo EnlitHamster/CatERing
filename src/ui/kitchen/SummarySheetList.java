@@ -12,6 +12,7 @@ import com.sun.javafx.collections.ObservableIntegerArrayImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -46,14 +47,13 @@ public class SummarySheetList {
         try{
             SummarySheet s = CatERing.getInstance().getKitchenManager().createSummarySheet(currentService);
         }
-        catch (UseCaseLogicException e) {
-            e.printStackTrace();
-        }
-        catch (KitchenJobsException e) {
+        catch (UseCaseLogicException | KitchenJobsException e) {
             e.printStackTrace();
         }
         kitchenManagementController.showCurrentSummarySheet();
     }
+
+
 
     public void initialize() {
         if(eventListItems == null){
@@ -80,6 +80,27 @@ public class SummarySheetList {
         }
         else {
             eventList.refresh();
+        }
+    }
+
+    public void deleteButtonPressed(ActionEvent actionEvent) {
+        ServiceInfo currentService = summarySheetList.getSelectionModel().getSelectedItem();
+        try{
+            CatERing.getInstance().getKitchenManager().selectSummarySheet(currentService);
+        }
+        catch (UseCaseLogicException | KitchenJobsException e) {
+            e.printStackTrace();
+        }
+        kitchenManagementController.showCurrentSummarySheet();
+    }
+
+    public void openButtonPressed(ActionEvent actionEvent) {
+        ServiceInfo currentService = summarySheetList.getSelectionModel().getSelectedItem();
+        try{
+            CatERing.getInstance().getKitchenManager().deleteSummarySheet(currentService);
+        }
+        catch (UseCaseLogicException | KitchenJobsException e) {
+            e.printStackTrace();
         }
     }
 }

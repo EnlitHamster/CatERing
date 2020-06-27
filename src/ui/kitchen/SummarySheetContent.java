@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ui.shiftBoard.ShiftBoardController;
 
 import java.io.IOException;
 
@@ -173,11 +174,27 @@ public class SummarySheetContent {
         }
     }
 
-    public void upButtonPressed(ActionEvent actionEvent) {
+    public void upButtonPressed() {
         this.changeSectionPosition(-1);
     }
 
-    public void downButtonPressed(ActionEvent actionEvent) {
+    public void downButtonPressed() {
         this.changeSectionPosition(+1);
+    }
+
+    public void shiftBoardButtonPressed() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../shiftBoard/shiftBoard.fxml"));
+        try {
+            Pane pane = loader.load();
+            ShiftBoardController controller = loader.getController();
+            Stage stage = new Stage();
+            controller.init(stage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(pane));
+            stage.setTitle("Tabellone turni");
+            stage.showAndWait();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

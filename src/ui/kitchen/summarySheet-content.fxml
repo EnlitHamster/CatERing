@@ -30,7 +30,7 @@
    <bottom>
       <FlowPane alignment="CENTER" hgap="5.0" prefHeight="39.0" prefWidth="517.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Consulta il tabellone" />
+            <Button onAction="#shiftBoardButtonPressed" mnemonicParsing="false" text="Consulta il tabellone" />
             <Button mnemonicParsing="false" onAction="#exitButtonPressed" text="Esci" />
          </children>
          <BorderPane.margin>
