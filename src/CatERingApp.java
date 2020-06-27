@@ -20,7 +20,8 @@ public class CatERingApp extends Application {
             primaryStage.setTitle("Cat&Ring");
             primaryStage.setScene(new Scene(root));
             primaryStage.setMaxWidth(800);
-            primaryStage.setMaxHeight(800);
+            primaryStage.setMinHeight(500);
+            primaryStage.setMaxHeight(500);
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();

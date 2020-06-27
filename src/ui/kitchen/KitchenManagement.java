@@ -4,6 +4,7 @@ import businesslogic.CatERing;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import ui.Main;
@@ -13,7 +14,7 @@ import java.awt.*;
 import java.io.IOException;
 
 public class KitchenManagement {
-    @FXML BorderPane summarySheetListPane;
+    @FXML SplitPane summarySheetListPane;
     @FXML BorderPane containerPane;
     @FXML SummarySheetList summarySheetListPaneController;
     @FXML Label userLabel;

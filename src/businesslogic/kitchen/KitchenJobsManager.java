@@ -20,10 +20,6 @@ public class KitchenJobsManager {
         eventReceivers = new ArrayList<>();
     }
 
-    public ObservableList<SummarySheet> getAllSummarySheet(){
-        SummarySheet.loadAllSummarySheets();
-    }
-
     public SummarySheet createSummarySheet(ServiceInfo service) throws UseCaseLogicException, KitchenJobsException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (!user.isChef()) throw new UseCaseLogicException();

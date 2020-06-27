@@ -1,20 +1,32 @@
 package ui.kitchen;
 
 import businesslogic.CatERing;
+import businesslogic.event.EventInfo;
+import businesslogic.event.ServiceInfo;
 import businesslogic.kitchen.SummarySheet;
 import businesslogic.menu.Menu;
 import businesslogic.user.User;
 import com.sun.javafx.collections.ObservableIntegerArrayImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 
 public class SummarySheetList {
 
-    @FXML ListView<Integer> summarySheetList;
-    ObservableList<Integer> summarySheetItems;
+    @FXML ListView<ServiceInfo> summarySheetList;
+    ObservableList<ServiceInfo> summarySheetItems;
+
+    @FXML ListView<EventInfo> eventList;
+    ObservableList<EventInfo> eventListItems;
+
+    @FXML Button newButton;
+    @FXML Button openButton;
+    @FXML Button deleteButton;
+
     private KitchenManagement kitchenManagementController;
 
     public void setParent(KitchenManagement kitchenManagement) {
@@ -27,20 +39,27 @@ public class SummarySheetList {
     }
 
     public void initialize() {
-        if (summarySheetItems == null) {
-            summarySheetItems = CatERing.getInstance().getKitchenManager().getAllSummarySheet();
-            summarySheetList.setItems(summarySheetItems);
-            summarySheetList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-            /*summarySheetList.getSelectionModel().selectedItemProperty().addListener((observableValue, oldMenu, newMenu) -> {
-                User u = CatERing.getInstance().getUserManager().getCurrentUser();
-                System.out.println(u.getId());
+        if(eventListItems == null){
+            eventListItems = CatERing.getInstance().getEventManager().getEventInfo();
+            eventList.setItems(eventListItems);
+            eventList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+            eventList.getSelectionModel().selectedItemProperty().addListener((observableValue, oldEvent, newEvent) -> {
+                if(newEvent != null) {
+                    summarySheetItems = newEvent.getServices();
+                    summarySheetList.getSelectionModel().selectedItemProperty().addListener((obsV, oldService, newService) -> {
+                        User u = CatERing.getInstance().getUserManager().getCurrentUser();
+                        newButton.setDisable(newService == null || !newService.getEvent().isChef(u) || newService.hasSummarySheet());
+                        openButton.setDisable(newService == null || !newService.getEvent().isChef(u) || !newService.hasSummarySheet());
+                        deleteButton.setDisable(newService == null || !newService.getEvent().isChef(u) || !newService.hasSummarySheet());
+                    });
+                }
+                else summarySheetItems = FXCollections.observableArrayList();
+                summarySheetList.setItems(summarySheetItems);
+            });
 
-                eliminaButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));
-                apriButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));
-                copiaButton.setDisable(newMenu == null);
-            });*/
-        } else {
-            summarySheetList.refresh();
+        }
+        else {
+            eventList.refresh();
         }
     }
 }

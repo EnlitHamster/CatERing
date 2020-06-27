@@ -49,7 +49,7 @@ public class Main {
     }
 
     public void startMenuManagement() {
-        CatERing.getInstance().getUserManager().fakeLogin("Tony");
+        CatERing.getInstance().getUserManager().fakeLogin("Lidia");
 
         menuManagementPaneController.initialize();
         paneContainer.getChildren().remove(startPane);
@@ -61,7 +61,7 @@ public class Main {
     }
 
     public void startKitchenManagement(){
-        CatERing.getInstance().getUserManager().fakeLogin("Tony");
+        CatERing.getInstance().getUserManager().fakeLogin("Lidia");
 
         kitchenManagementPaneController.initialize();
         paneContainer.getChildren().remove(startPane);
