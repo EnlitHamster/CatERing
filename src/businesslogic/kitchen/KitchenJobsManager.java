@@ -7,6 +7,8 @@ import businesslogic.recipe.KitchenTask;
 import businesslogic.shift.KitchenShift;
 import businesslogic.shift.ShiftManager;
 import businesslogic.user.User;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,5 +177,16 @@ public class KitchenJobsManager {
 
     public void removeEventReceiver(KitchenJobsEventReceiver rec) {
         this.eventReceivers.remove(rec);
+    }
+
+    public ObservableList<KitchenTask> getOffMenuKitchenTask() {
+        ObservableList<KitchenTask> allTask = CatERing.getInstance().getKitchenTaskManager().getKitchenTasks();
+        List<KitchenTask> jobKitchenTask = currentSummarySheet.getJobs().stream().map(KitchenJob::getItemTask).collect(Collectors.toList());
+        return FXCollections.observableArrayList(
+                allTask.stream()
+                        .filter(t -> !currentSummarySheet.getService().getMenu().getNeededTasks().contains(t))
+                        .filter(jobKitchenTask::contains)
+                        .collect(Collectors.toList())
+        );
     }
 }

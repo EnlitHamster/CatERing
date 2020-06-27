@@ -34,6 +34,10 @@ public class KitchenJob {
         shift = null;
     }
 
+    public String toString(){
+        return itemTask.getName();
+    }
+
     public Integer getId() {return id;}
 
     public Long getTimeEstimate() {
@@ -55,6 +59,8 @@ public class KitchenJob {
     public KitchenShift getShift() {
         return shift;
     }
+
+    public KitchenTask getItemTask() {return itemTask;}
 
     public void setTimeEstimate(Long timeEstimate) {
         if (timeEstimate <= 0) throw new IllegalArgumentException();
@@ -200,5 +206,30 @@ public class KitchenJob {
         job.itemTask = KitchenTask.loadTaskById(obj.tid);
         loadedJobs.put(job.id, job);
         return job;
+    }
+
+    public boolean hasCook() {
+        return assignedCook != null;
+    }
+
+    public String getAssignedCookName() {
+        if(assignedCook == null) return "Non assegnato";
+        else return assignedCook.getUserName();
+    }
+
+    public String getShiftString() {
+        if(shift == null) return "Non assegnato";
+        else return shift.toString();
+    }
+
+
+    public String getEstimateTime() {
+        if(timeEstimate == null) return "0";
+        else return String.valueOf(timeEstimate);
+    }
+
+    public String getQuantityString() {
+        if(quantity == null) return "0";
+        else return String.valueOf(quantity);
     }
 }

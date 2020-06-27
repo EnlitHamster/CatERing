@@ -19,6 +19,7 @@ public class CatERingApp extends Application {
             Parent root = FXMLLoader.load(getClass().getResource("ui/main.fxml"));
             primaryStage.setTitle("Cat&Ring");
             primaryStage.setScene(new Scene(root));
+            primaryStage.setMinWidth(800);
             primaryStage.setMaxWidth(800);
             primaryStage.setMinHeight(500);
             primaryStage.setMaxHeight(500);

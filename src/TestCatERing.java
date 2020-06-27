@@ -38,7 +38,7 @@ public class TestCatERing {
             System.out.println("");
 
             System.out.println("\nTEST INSERT ITEM IN SECTION");
-            ObservableList<KitchenTask> kitchenTasks = CatERing.getInstance().getRecipeManager().getRecipes();
+            ObservableList<KitchenTask> kitchenTasks = CatERing.getInstance().getKitchenTaskManager().getKitchenTasks();
             for (int i = 0; i < 4 && i < kitchenTasks.size(); i++) {
                 CatERing.getInstance().getMenuManager().insertItem((Recipe) kitchenTasks.get(i), sec);
             }

@@ -3,13 +3,13 @@ package businesslogic.recipe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class RecipeManager {
+public class KitchenTaskManager {
 
-    public RecipeManager() {
+    public KitchenTaskManager() {
         KitchenTask.loadAllTasks();
     }
 
-    public ObservableList<KitchenTask> getRecipes() {
+    public ObservableList<KitchenTask> getKitchenTasks() {
         return FXCollections.unmodifiableObservableList(KitchenTask.getAllTasks());
     }
 }

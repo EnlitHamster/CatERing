@@ -48,9 +48,12 @@ public class Main {
 
     }
 
-    public void startMenuManagement() {
+    private void fakeLogin(){
         CatERing.getInstance().getUserManager().fakeLogin("Lidia");
+    }
 
+    public void startMenuManagement() {
+        fakeLogin();
         menuManagementPaneController.initialize();
         paneContainer.getChildren().remove(startPane);
         paneContainer.getChildren().add(menuManagementPane);
@@ -61,8 +64,7 @@ public class Main {
     }
 
     public void startKitchenManagement(){
-        CatERing.getInstance().getUserManager().fakeLogin("Lidia");
-
+        fakeLogin();
         kitchenManagementPaneController.initialize();
         paneContainer.getChildren().remove(startPane);
         paneContainer.getChildren().add(kitchenManagementPane);

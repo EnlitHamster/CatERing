@@ -134,7 +134,7 @@ public class Menu {
         this.sections.add(new Section("Secondi"));
         this.sections.add(new Section("Dessert"));
 
-        KitchenTask[] all = CatERing.getInstance().getRecipeManager().getRecipes().toArray(new KitchenTask[0]);
+        KitchenTask[] all = CatERing.getInstance().getKitchenTaskManager().getKitchenTasks().toArray(new KitchenTask[0]);
         freeItems.add(new MenuItem((Recipe) all[3]));
         freeItems.add(new MenuItem((Recipe) all[4]));
         freeItems.add(new MenuItem((Recipe) all[5]));

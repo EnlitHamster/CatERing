@@ -31,7 +31,7 @@
       <FlowPane alignment="CENTER" hgap="5.0" prefHeight="39.0" prefWidth="517.0" BorderPane.alignment="CENTER">
          <children>
             <Button mnemonicParsing="false" text="Consulta il tabellone" />
-            <Button onAction="#exitButtonPressed" mnemonicParsing="false" text="Esci" />
+            <Button mnemonicParsing="false" onAction="#exitButtonPressed" text="Esci" />
          </children>
          <BorderPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -62,18 +62,18 @@
                <center>
                   <BorderPane BorderPane.alignment="CENTER">
                      <center>
-                        <ListView fx:id = "jobList" prefHeight="200.0" prefWidth="299.0" />
+                        <ListView fx:id="jobList" prefHeight="200.0" prefWidth="299.0" />
                      </center>
                   </BorderPane>
                </center>
                <bottom>
                   <FlowPane alignment="CENTER" hgap="5.0" prefHeight="38.0" prefWidth="264.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Button mnemonicParsing="false" text="+" />
-                        <Button disable="true" mnemonicParsing="false" text="–" />
-                        <Button mnemonicParsing="false" text="Aggiungi ricetta" />
-                        <Button disable="true" mnemonicParsing="false" text="Up" />
-                        <Button disable="true" mnemonicParsing="false" text="Down" />
+                        <Button fx:id="addJobButton" onAction="#addJobButtonPressed" mnemonicParsing="false" text="+" />
+                        <Button fx:id="removeJobButton" onAction="#removeJobButtonPressed" disable="true" mnemonicParsing="false" text="–" />
+                        <Button fx:id="deleteOffMenuRecipeButton" onAction="#deleteOffMenuRecipe" disable="true" mnemonicParsing="false" text="Elimina ricetta fuori menu'"/>
+                        <Button fx:id="upButton" onAction="#upButtonPressed" disable="true" mnemonicParsing="false" text="Up" />
+                        <Button fx:id="downButton" onAction="#downButtonPressed" disable="true" mnemonicParsing="false" text="Down" />
                      </children>
                   </FlowPane>
                </bottom>
@@ -120,11 +120,11 @@
                         <Label text="Stima tempo" GridPane.rowIndex="2" />
                         <Label text="Quantità" GridPane.rowIndex="3" />
                         <Label text="Completo" GridPane.rowIndex="4" />
-                        <TextField editable="false" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
-                        <TextField editable="false" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <TextField fx:id="cookField" editable="false" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
+                        <TextField fx:id="shiftField" editable="false" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="estimateField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="quantityField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="isCompleteField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </children>
                   </GridPane>
                </center>
@@ -138,11 +138,13 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button mnemonicParsing="false" text="Modifica Info" GridPane.columnIndex="1" />
-                        <Button mnemonicParsing="false" text="Modifica Assegnamento" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Button mnemonicParsing="false" text="Elimina Assegnamento" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Button fx:id="modifyInfoButton" disable="true" mnemonicParsing="false" onAction="#modifyInfoPressed" text="Modifica Info" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
+                        <Button disable="true" mnemonicParsing="false" text="Modifica Assegnamento" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <Button disable="true" mnemonicParsing="false" text="Elimina Assegnamento" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                        <Button fx:id="setCompletedButton" onAction="#setCompletedButtonPressed" disable="true" mnemonicParsing="false" text="Marca disponibile" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
                </bottom>

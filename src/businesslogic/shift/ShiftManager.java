@@ -37,7 +37,7 @@ public class ShiftManager {
     }
 
     public void removeKitchenJob(KitchenJob job){
-        job.getShift().removeJob(job);
+        if(job.getShift() != null) job.getShift().removeJob(job);
     }
 
     public void removeAllKitchenJob(Collection<KitchenJob> jobs){

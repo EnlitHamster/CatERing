@@ -108,6 +108,4 @@ public abstract class KitchenTask {
         all.put(obj.task.id, obj.task);
         return obj.task;
     }
-
-
 }

@@ -16,7 +16,7 @@ public class TestCatERing2b {
             Menu m = CatERing.getInstance().getMenuManager().createMenu("Menu Pinco Pallino");
             Section sec = CatERing.getInstance().getMenuManager().defineSection("Antipasti");
 
-            ObservableList<KitchenTask> kitchenTasks = CatERing.getInstance().getRecipeManager().getRecipes();
+            ObservableList<KitchenTask> kitchenTasks = CatERing.getInstance().getKitchenTaskManager().getKitchenTasks();
             for (int i = 0; i < 4 && i < kitchenTasks.size(); i++) {
                 CatERing.getInstance().getMenuManager().insertItem((Recipe) kitchenTasks.get(i), sec);
             }

@@ -1,101 +1,183 @@
 package ui.kitchen;
 
 import businesslogic.CatERing;
+import businesslogic.UseCaseLogicException;
 import businesslogic.kitchen.KitchenJob;
+import businesslogic.kitchen.KitchenJobsException;
+import businesslogic.kitchen.KitchenJobsManager;
 import businesslogic.kitchen.SummarySheet;
+import businesslogic.menu.Section;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import ui.menu.MenuManagement;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 
 public class SummarySheetContent {
     KitchenManagement kitchenManagementController;
 
+    @FXML Button deleteOffMenuRecipeButton;
+    @FXML Button downButton;
+    @FXML Button upButton;
+    @FXML Button setCompletedButton;
+    @FXML Button modifyInfoButton;
     @FXML Label serviceLabel;
     @FXML ListView<KitchenJob> jobList;
+    @FXML TextField cookField;
+    @FXML TextField shiftField;
+    @FXML TextField estimateField;
+    @FXML TextField quantityField;
+    @FXML TextField isCompleteField;
+    @FXML Button addJobButton;
+    @FXML Button removeJobButton;
+
+    private KitchenJobsManager getKitchenManager(){
+        return CatERing.getInstance().getKitchenManager();
+    }
 
     public void initialize() {
-        SummarySheet toview = CatERing.getInstance().getKitchenManager().getCurrentSummarySheet();
+        SummarySheet toview = getKitchenManager().getCurrentSummarySheet();
         if (toview != null) {
             serviceLabel.setText(toview.getService().getName());
             jobList.setItems(toview.getJobs());
         }
-
-        /*sectionList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        sectionList.getSelectionModel().select(null);
-        sectionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Section>() {
-            @Override
-            public void changed(ObservableValue<? extends Section> observableValue, Section oldSection, Section newSection) {
-                if (newSection != null && newSection != oldSection) {
-                    if (!paneVisible) {
-                        centralPane.getChildren().remove(emptyPane);
-                        centralPane.add(itemsPane, 1, 0);
-                        paneVisible = true;
-                    }
-                    itemsTitle.setText("Voci di " + newSection.getName());
-                    freeItemsToggle.setSelected(false);
-                    itemsList.setItems(newSection.getItems());
-                    // enable other section actions
-                    addItemButton.setDisable(false);
-                    deleteSectionButton.setDisable(false);
-                    editSectionButton.setDisable(false);
-                    int pos = sectionList.getSelectionModel().getSelectedIndex();
-                    upSectionButton.setDisable(pos <= 0);
-                    downSectionButton.setDisable(pos >= (CatERing.getInstance().getMenuManager().getCurrentMenu().getSectionCount()-1));
-                } else if (newSection == null) {
-                    // disable section actions
-                    deleteSectionButton.setDisable(true);
-                    editSectionButton.setDisable(true);
-                    upSectionButton.setDisable(true);
-                    downSectionButton.setDisable(true);
-                }
-            }
+        jobList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        jobList.getSelectionModel().select(null);
+        jobList.getSelectionModel().selectedItemProperty().addListener((observableValue, oldJob, newJob) -> {
+            removeJobButton.setDisable(newJob == null);
+            deleteOffMenuRecipeButton.setDisable(newJob == null);
+            downButton.setDisable(newJob == null);
+            upButton.setDisable(newJob == null);
+            refreshCurrentJob();
         });
-
-        itemsList.setItems(FXCollections.emptyObservableList());
-        itemsList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        itemsList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MenuItem>() {
-            @Override
-            public void changed(ObservableValue<? extends MenuItem> observableValue, MenuItem oldItem, MenuItem newItem) {
-                if (newItem != null && newItem != oldItem) {
-                    int pos = itemsList.getSelectionModel().getSelectedIndex();
-                    int count = 0;
-                    if (freeItemsToggle.isSelected()) count = CatERing.getInstance().getMenuManager().getCurrentMenu().getFreeItemCount();
-                    else {
-                        Section sec = sectionList.getSelectionModel().getSelectedItem();
-                        if (sec != null) {
-                            count = sec.getItemsCount();
-                        }
-                    }
-                    upItemButton.setDisable(pos <= 0);
-                    downItemButton.setDisable(pos >= (count-1));
-                    spostaItemButton.setDisable(false);
-                    modificaItemButton.setDisable(false);
-                    deleteItem.setDisable(false);
-                } else if (newItem == null) {
-                    upItemButton.setDisable(true);
-                    downItemButton.setDisable(true);
-                    spostaItemButton.setDisable(true);
-                    modificaItemButton.setDisable(true);
-                    deleteItem.setDisable(true);
-                }
-            }
-        });
-        emptyPane = new BorderPane();
-        centralPane.getChildren().remove(itemsPane);
-        centralPane.add(emptyPane, 1, 0);
-        paneVisible = false;
-
-        freeItemsToggle.setSelected(false);*/
     }
 
     public void setMenuManagementController(KitchenManagement kitchenManagement) {
         kitchenManagementController = kitchenManagement;
     }
 
-    public void exitButtonPressed(ActionEvent actionEvent) {
+    public void exitButtonPressed() {
         kitchenManagementController.showSummarySheetList();
+    }
+
+    private KitchenJob getCurrentJob(){
+        return jobList.getSelectionModel().getSelectedItem();
+    }
+
+    private void refreshCurrentJob(){
+        KitchenJob currJob = getCurrentJob();
+        if (currJob != null) {
+            cookField.setText(currJob.getAssignedCookName());
+            shiftField.setText(currJob.getShiftString());
+            estimateField.setText(currJob.getEstimateTime());
+            quantityField.setText(currJob.getQuantityString());
+            isCompleteField.setText(currJob.isComplete() ? "si'" : "no");
+            modifyInfoButton.setDisable(false);
+            setCompletedButton.setDisable(currJob.isComplete());
+        }
+        else{
+            cookField.setText("");
+            shiftField.setText("");
+            estimateField.setText("");
+            quantityField.setText("");
+            isCompleteField.setText("");
+            modifyInfoButton.setDisable(true);
+            setCompletedButton.setDisable(true);
+        }
+    }
+
+    public void modifyInfoPressed() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("summarySheet-modifyDialog.fxml"));
+        try {
+            Pane pane = loader.load();
+            ModifyDialog controller = loader.getController();
+            Stage stage = new Stage();
+            controller.init(stage, jobList.getSelectionModel().getSelectedItem());
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(pane));
+            stage.setTitle("Modifica info compito");
+            stage.showAndWait();
+            refreshCurrentJob();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void setCompletedButtonPressed() {
+        try {
+            KitchenJob currJob = getCurrentJob();
+            getKitchenManager().setJobCompleted(currJob);
+            refreshCurrentJob();
+        } catch (UseCaseLogicException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addJobButtonPressed() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("summarySheet-addTask.fxml"));
+        try {
+            Pane pane = loader.load();
+            AddTaskDialog controller = loader.getController();
+            Stage stage = new Stage();
+            controller.init(stage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(pane));
+            stage.setTitle("Aggiungi un compito per una ricetta");
+            stage.showAndWait();
+            refreshCurrentJob();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void removeJobButtonPressed() {
+        try {
+            getKitchenManager().deleteJob(getCurrentJob());
+        } catch (UseCaseLogicException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteOffMenuRecipe() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("summarySheet-deleteOffMenuTask.fxml"));
+        try {
+            Pane pane = loader.load();
+            DeleteOffMenuTaskDialog controller = loader.getController();
+            Stage stage = new Stage();
+            controller.init(stage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(pane));
+            stage.setTitle("Elimina una ricetta fuori menu");
+            stage.showAndWait();
+            refreshCurrentJob();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void changeSectionPosition(int change) {
+        int newpos = jobList.getSelectionModel().getSelectedIndex() + change;
+        KitchenJob job = jobList.getSelectionModel().getSelectedItem();
+        try {
+            CatERing.getInstance().getKitchenManager().rearrangeJob(job, newpos);
+            //sectionList.refresh();
+            jobList.getSelectionModel().select(newpos);
+        } catch (UseCaseLogicException | KitchenJobsException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void upButtonPressed(ActionEvent actionEvent) {
+        this.changeSectionPosition(-1);
+    }
+
+    public void downButtonPressed(ActionEvent actionEvent) {
+        this.changeSectionPosition(+1);
     }
 }
