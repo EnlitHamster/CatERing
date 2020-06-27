@@ -22,6 +22,10 @@ public class SummarySheet {
 
     private SummarySheet() {}
 
+    public ObservableList<KitchenJob> getJobs() {
+        return jobs;
+    }
+
     public SummarySheet(ServiceInfo service) {
         this.service = service;
         if (service.getMenu() != null)

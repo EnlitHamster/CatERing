@@ -1,6 +1,7 @@
 package ui.kitchen;
 
 import businesslogic.CatERing;
+import businesslogic.kitchen.KitchenJob;
 import businesslogic.kitchen.SummarySheet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,16 +14,16 @@ public class SummarySheetContent {
     KitchenManagement kitchenManagementController;
 
     @FXML Label serviceLabel;
-    @FXML ListView jobList;
+    @FXML ListView<KitchenJob> jobList;
 
     public void initialize() {
         SummarySheet toview = CatERing.getInstance().getKitchenManager().getCurrentSummarySheet();
         if (toview != null) {
             serviceLabel.setText(toview.getService().getName());
-            jobList.setItems(toview.get());
+            jobList.setItems(toview.getJobs());
         }
 
-        sectionList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        /*sectionList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         sectionList.getSelectionModel().select(null);
         sectionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Section>() {
             @Override
@@ -87,7 +88,7 @@ public class SummarySheetContent {
         centralPane.add(emptyPane, 1, 0);
         paneVisible = false;
 
-        freeItemsToggle.setSelected(false);
+        freeItemsToggle.setSelected(false);*/
     }
 
     public void setMenuManagementController(KitchenManagement kitchenManagement) {
