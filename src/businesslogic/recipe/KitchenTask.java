@@ -15,7 +15,9 @@ public abstract class KitchenTask {
     protected List<String> tags;
     protected List<Preparation> usedPreparations;
 
-    protected KitchenTask() {}
+    protected KitchenTask() {
+        usedPreparations = new ArrayList<>();
+    }
 
     public KitchenTask(String name) {
         id = 0;
