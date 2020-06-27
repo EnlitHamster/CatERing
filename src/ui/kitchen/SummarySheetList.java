@@ -65,7 +65,8 @@ public class SummarySheetList {
                     summarySheetItems = newEvent.getServices();
                     summarySheetList.getSelectionModel().selectedItemProperty().addListener((obsV, oldService, newService) -> {
                         User u = CatERing.getInstance().getUserManager().getCurrentUser();
-                        newButton.setDisable(newService == null || !newService.getEvent().isChef(u) || newService.hasSummarySheet());
+                        newButton.setDisable(newService == null || !newService.getEvent().isChef(u)
+                                || newService.hasSummarySheet() || !newService.hasMenu());
                         openButton.setDisable(newService == null || !newService.getEvent().isChef(u) || !newService.hasSummarySheet());
                         deleteButton.setDisable(newService == null || !newService.getEvent().isChef(u) || !newService.hasSummarySheet());
                     });

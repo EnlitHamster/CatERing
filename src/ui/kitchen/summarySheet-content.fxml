@@ -19,7 +19,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </BorderPane.margin>
          <center>
-            <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="551.0" text="Riferimento al servizio" BorderPane.alignment="CENTER_LEFT">
+            <Label fx:id="serviceLabel" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="551.0" text="Riferimento al servizio" BorderPane.alignment="CENTER_LEFT">
                <font>
                   <Font size="21.0" />
                </font>
@@ -31,7 +31,7 @@
       <FlowPane alignment="CENTER" hgap="5.0" prefHeight="39.0" prefWidth="517.0" BorderPane.alignment="CENTER">
          <children>
             <Button mnemonicParsing="false" text="Consulta il tabellone" />
-            <Button mnemonicParsing="false" text="Esci" />
+            <Button onAction="#exitButtonPressed" mnemonicParsing="false" text="Esci" />
          </children>
          <BorderPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -62,7 +62,7 @@
                <center>
                   <BorderPane BorderPane.alignment="CENTER">
                      <center>
-                        <ListView prefHeight="200.0" prefWidth="299.0" />
+                        <ListView fx:id = "jobList" prefHeight="200.0" prefWidth="299.0" />
                      </center>
                   </BorderPane>
                </center>

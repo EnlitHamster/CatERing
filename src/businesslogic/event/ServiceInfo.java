@@ -58,6 +58,8 @@ public class ServiceInfo implements EventItemInfo {
         summarySheet = sheet;
     }
 
+    public String getName(){return name;}
+
     public String toString() {
         return name + ": " + date + " (" + timeStart + "-" + timeEnd + "), " + participants + " pp.";
     }
@@ -86,5 +88,9 @@ public class ServiceInfo implements EventItemInfo {
         serv.summarySheet = SummarySheet.loadSummarySheetByService(serv);
 
         return result;
+    }
+
+    public boolean hasMenu() {
+        return menu != null;
     }
 }

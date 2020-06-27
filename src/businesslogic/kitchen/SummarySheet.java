@@ -3,6 +3,8 @@ package businesslogic.kitchen;
 import businesslogic.event.ServiceInfo;
 import businesslogic.recipe.KitchenTask;
 import businesslogic.shift.ShiftManager;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import persistence.BatchUpdateHandler;
 import persistence.PersistenceManager;
 
@@ -15,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SummarySheet {
-    private List<KitchenJob> jobs;
+    private ObservableList<KitchenJob> jobs;
     private ServiceInfo service;
 
     private SummarySheet() {}
@@ -23,9 +25,11 @@ public class SummarySheet {
     public SummarySheet(ServiceInfo service) {
         this.service = service;
         if (service.getMenu() != null)
-            jobs = service.getMenu().getNeededTasks().stream()
-                    .map(KitchenJob::new)
-                    .collect(Collectors.toList());
+            jobs = FXCollections.observableArrayList(
+                    service.getMenu().getNeededTasks().stream()
+                        .map(KitchenJob::new)
+                        .collect(Collectors.toList())
+            );
     }
 
     public boolean containsJob(KitchenJob job) {
@@ -94,9 +98,9 @@ public class SummarySheet {
         if (jobs.size() > 0) {
             SummarySheet sheet = new SummarySheet();
             sheet.service = service;
-            sheet.jobs = jobs.stream()
+            sheet.jobs = FXCollections.observableArrayList(jobs.stream()
                     .map(KitchenJob::loadKitchenJobById)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList()));
             return sheet;
         }
         return null;
