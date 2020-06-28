@@ -19,4 +19,9 @@ public class ShiftPersistence implements ShiftEventReceiver {
     public void updateKitchenShiftComplete(KitchenShift shift) {
         KitchenShift.saveShiftComplete(shift);
     }
+
+    @Override
+    public void updateKitchenShiftAdded(KitchenShift shift) {
+        KitchenShift.saveNewKitchenShift(shift);
+    }
 }
