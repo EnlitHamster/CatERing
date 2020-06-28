@@ -64,6 +64,10 @@ public class AssignJobDialog {
             shiftDate.set(Calendar.MONTH, monthToInt(selectedMonth));
             shiftDate.set(Calendar.DAY_OF_MONTH, selectedDay);
             shiftDate.set(Calendar.HOUR_OF_DAY, selectedHour);
+            shiftDate.set(Calendar.MINUTE, 0);
+            shiftDate.set(Calendar.SECOND, 0);
+            shiftDate.set(Calendar.MILLISECOND, 0);
+            System.out.println(shiftDate.getTimeInMillis());
             KitchenShift shift = CatERing.getInstance().getShiftManager().getKitchenShift(shiftDate);
             if (shift == null) shift = CatERing.getInstance().getShiftManager().createKitchenShift(new Timestamp(shiftDate.getTimeInMillis()));
             try {
