@@ -51,6 +51,7 @@ public class SummarySheetList {
             e.printStackTrace();
         }
         kitchenManagementController.showCurrentSummarySheet();
+        eventList.refresh();
     }
 
 
@@ -86,21 +87,23 @@ public class SummarySheetList {
     public void deleteButtonPressed(ActionEvent actionEvent) {
         ServiceInfo currentService = summarySheetList.getSelectionModel().getSelectedItem();
         try{
+            CatERing.getInstance().getKitchenManager().deleteSummarySheet(currentService);
+        }
+        catch (UseCaseLogicException | KitchenJobsException e) {
+            e.printStackTrace();
+        }
+        eventList.refresh();
+    }
+
+    public void openButtonPressed(ActionEvent actionEvent) {
+        ServiceInfo currentService = summarySheetList.getSelectionModel().getSelectedItem();
+        try{
             CatERing.getInstance().getKitchenManager().selectSummarySheet(currentService);
         }
         catch (UseCaseLogicException | KitchenJobsException e) {
             e.printStackTrace();
         }
         kitchenManagementController.showCurrentSummarySheet();
-    }
-
-    public void openButtonPressed(ActionEvent actionEvent) {
-        ServiceInfo currentService = summarySheetList.getSelectionModel().getSelectedItem();
-        try{
-            CatERing.getInstance().getKitchenManager().deleteSummarySheet(currentService);
-        }
-        catch (UseCaseLogicException | KitchenJobsException e) {
-            e.printStackTrace();
-        }
+        eventList.refresh();
     }
 }

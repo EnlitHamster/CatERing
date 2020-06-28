@@ -59,7 +59,7 @@ public abstract class KitchenTask {
     // STATIC METHODS FOR PERSISTENCE
 
     public static ObservableList<KitchenTask> loadAllTasks() {
-        String query = "SELECT * FROM KitchenTasks";
+        String query = "SELECT * FROM kitchentasks";
         PersistenceManager.executeQuery(query, rs -> {
             int id = rs.getInt("id");
             if (all.containsKey(id)) {
@@ -73,7 +73,7 @@ public abstract class KitchenTask {
                 all.put(task.id, task);
             }
         });
-        query = "SELECT * FROM UsedPreparations";
+        query = "SELECT * FROM usedpreparations";
         PersistenceManager.executeQuery(query, rs -> {
             int id = rs.getInt("recipe");
             int pid = rs.getInt("preparation");
@@ -96,13 +96,13 @@ public abstract class KitchenTask {
             KitchenTask task;
             final List<Integer> preps = new ArrayList<>();
         };
-        String query = "SELECT * FROM KitchenTasks WHERE id = " + id;
+        String query = "SELECT * FROM kitchentasks WHERE id = " + id;
         PersistenceManager.executeQuery(query, rs -> {
                 if (rs.getBoolean("is recipe")) obj.task = Recipe.loadRecipe(rs);
                 else obj.task = Preparation.loadPreparation(rs);
                 obj.task.id = id;
         });
-        query = "SELECT preparation FROM UsedPreparations WHERE recipe = " + id;
+        query = "SELECT preparation FROM usedpreparations WHERE recipe = " + id;
         PersistenceManager.executeQuery(query, rs -> obj.preps.add(rs.getInt("preparation")));
         for (Integer pid : obj.preps) obj.task.usedPreparations.add((Preparation) loadTaskById(pid));
         all.put(obj.task.id, obj.task);

@@ -3,10 +3,13 @@ package businesslogic;
 import businesslogic.event.EventManager;
 import businesslogic.kitchen.KitchenJobsManager;
 import businesslogic.menu.MenuManager;
+import businesslogic.shift.ShiftManager;
 import businesslogic.recipe.KitchenTaskManager;
 import businesslogic.shift.ShiftManager;
 import businesslogic.user.UserManager;
+import persistence.KitchenJobsPersistence;
 import persistence.MenuPersistence;
+import persistence.ShiftPersistence;
 
 public class CatERing {
     private static CatERing singleInstance;
@@ -26,6 +29,8 @@ public class CatERing {
     private final ShiftManager shiftMgr;
 
     private final MenuPersistence menuPersistence;
+    private final ShiftPersistence shiftPersistence;
+    private final KitchenJobsPersistence kitchenJobsPersistence;
 
     private CatERing() {
         menuMgr = new MenuManager();
@@ -34,8 +39,11 @@ public class CatERing {
         eventMgr = new EventManager();
         kitchenMgr = new KitchenJobsManager();
         menuPersistence = new MenuPersistence();
-        shiftMgr = new ShiftManager();
+        shiftPersistence = new ShiftPersistence();
+        kitchenJobsPersistence = new KitchenJobsPersistence();
         menuMgr.addEventReceiver(menuPersistence);
+        ShiftManager.getInstance().addEventReceiver(shiftPersistence);
+        kitchenMgr.addEventReceiver(kitchenJobsPersistence);
     }
 
     public MenuManager getMenuManager() {
@@ -54,8 +62,12 @@ public class CatERing {
         return userMgr;
     }
 
-    public EventManager getEventManager() { return eventMgr; }
+    public EventManager getEventManager() {
+        return eventMgr;
+    }
 
-    public ShiftManager getShiftMgr() {return shiftMgr;}
+    public ShiftManager getShiftManager() {
+        return ShiftManager.getInstance();
+    }
 
 }

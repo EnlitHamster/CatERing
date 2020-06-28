@@ -1,8 +1,8 @@
 package businesslogic.kitchen;
 
+import businesslogic.CatERing;
 import businesslogic.event.ServiceInfo;
 import businesslogic.recipe.KitchenTask;
-import businesslogic.shift.ShiftManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import persistence.BatchUpdateHandler;
@@ -41,7 +41,7 @@ public class SummarySheet {
     }
 
     public void removeJob(KitchenJob job) {
-        ShiftManager.getInstance().removeKitchenJob(job);
+        CatERing.getInstance().getShiftManager().removeKitchenJob(job);
         jobs.remove(job);
     }
 
@@ -61,7 +61,7 @@ public class SummarySheet {
     }
 
     public void removeAllJobs(Collection<KitchenJob> jobs) {
-        ShiftManager.getInstance().removeAllKitchenJob(jobs);
+        CatERing.getInstance().getShiftManager().removeAllKitchenJob(jobs);
         this.jobs.removeAll(jobs);
     }
 
@@ -78,7 +78,7 @@ public class SummarySheet {
     }
 
     public void dispose() {
-        ShiftManager.getInstance().removeAllKitchenJob(jobs);
+        CatERing.getInstance().getShiftManager().removeAllKitchenJob(jobs.stream().filter(KitchenJob::hasShift).collect(Collectors.toList()));
     }
 
     public ServiceInfo getService() {
@@ -97,7 +97,7 @@ public class SummarySheet {
 
     public static SummarySheet loadSummarySheetByService(ServiceInfo service) {
         List<Integer> jobs = new ArrayList<>();
-        String query = "SELECT id,position FROM KitchenJobs WHERE service = " + service.getId() + " ORDER BY position ASC";
+        String query = "SELECT id,position FROM kitchenjobs WHERE service = " + service.getId() + " ORDER BY position ASC";
         PersistenceManager.executeQuery(query, rs -> jobs.add(rs.getInt("id")));
         if (jobs.size() > 0) {
             SummarySheet sheet = new SummarySheet();
@@ -111,7 +111,7 @@ public class SummarySheet {
     }
 
     public static void saveJobsOrder(SummarySheet sheet) {
-        String upd = "UPDATE KitchenJobs SET position = ? WHERE id = ?";
+        String upd = "UPDATE kitchenjobs SET position = ? WHERE id = ?";
         PersistenceManager.executeBatchUpdate(upd, sheet.jobs.size(), new BatchUpdateHandler() {
             @Override
             public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {

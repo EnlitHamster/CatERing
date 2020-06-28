@@ -5,7 +5,6 @@ import businesslogic.UseCaseLogicException;
 import businesslogic.event.ServiceInfo;
 import businesslogic.recipe.KitchenTask;
 import businesslogic.shift.KitchenShift;
-import businesslogic.shift.ShiftManager;
 import businesslogic.user.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,15 +29,18 @@ public class KitchenJobsManager {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (!user.isChef()) throw new UseCaseLogicException();
         if (!service.getEvent().isChef(user) || service.hasSummarySheet()) throw new KitchenJobsException();
-        currentSummarySheet = new SummarySheet(service);
+        SummarySheet sheet = new SummarySheet(service);
+        service.setSummarySheet(sheet);
+        setCurrentSummarySheet(sheet);
+        this.notifySummarySheetAdded(currentSummarySheet);
         return currentSummarySheet;
     }
 
     public void selectSummarySheet(ServiceInfo service) throws UseCaseLogicException, KitchenJobsException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (!user.isChef()) throw new UseCaseLogicException();
-        if (!service.getEvent().isChef(user) || service.hasSummarySheet()) throw new KitchenJobsException();
-        currentSummarySheet = service.getSummarySheet();
+        if (!service.getEvent().isChef(user) || !service.hasSummarySheet()) throw new KitchenJobsException();
+        setCurrentSummarySheet(service.getSummarySheet());
     }
 
     public void deleteSummarySheet(ServiceInfo service) throws UseCaseLogicException, KitchenJobsException {
@@ -48,63 +50,72 @@ public class KitchenJobsManager {
         SummarySheet summarySheet = service.getSummarySheet();
         summarySheet.dispose();
         service.setSummarySheet(null);
+        this.notifySummarySheetRemoved(summarySheet);
     }
 
     public void addTask(KitchenTask task) throws UseCaseLogicException {
         if (currentSummarySheet == null) throw new UseCaseLogicException();
-        currentSummarySheet.addJob(task);
+        KitchenJob job = currentSummarySheet.addJob(task);
+        this.notifyJobAdded(job, currentSummarySheet.jobsSize() - 1);
     }
 
     public void deleteOffMenuRecipe(KitchenTask task) throws UseCaseLogicException, KitchenJobsException {
         if (currentSummarySheet == null) throw new UseCaseLogicException();
         if (currentSummarySheet.getService().getMenu().getNeededTasks().contains(task)) throw new KitchenJobsException();
         List<KitchenJob> jobsByTask = currentSummarySheet.getJobsByTask(task);
-        ShiftManager.getInstance().removeAllKitchenJob(jobsByTask.stream().filter(KitchenJob::hasShift).collect(Collectors.toList()));
+        CatERing.getInstance().getShiftManager().removeAllKitchenJob(jobsByTask.stream().filter(KitchenJob::hasShift).collect(Collectors.toList()));
         currentSummarySheet.removeAllJobs(jobsByTask);
+        this.notifyJobsRemoved(jobsByTask);
     }
 
     public void deleteJob(KitchenJob job) throws UseCaseLogicException {
         if (currentSummarySheet == null || !currentSummarySheet.containsJob(job)) throw new UseCaseLogicException();
-        if (job.hasShift()) ShiftManager.getInstance().removeKitchenJob(job);
+        if (job.hasShift()) CatERing.getInstance().getShiftManager().removeKitchenJob(job);
         currentSummarySheet.removeJob(job);
+        this.notifyJobRemoved(job);
     }
 
     public void rearrangeJob(KitchenJob job, Integer position) throws UseCaseLogicException, KitchenJobsException {
         if (currentSummarySheet == null || !currentSummarySheet.containsJob(job)) throw new UseCaseLogicException();
         if (position < 0 && position >= currentSummarySheet.jobsSize()) throw new KitchenJobsException();
         currentSummarySheet.moveJob(job, position);
+        this.notifyJobsRearranged();
     }
 
     public void assignJob(KitchenJob job, KitchenShift shift, User cook) throws UseCaseLogicException, KitchenJobsException {
         if (currentSummarySheet == null || !currentSummarySheet.containsJob(job)) throw new UseCaseLogicException();
         if (cook != null && (!cook.isCook() || !shift.isAvailable(cook)) || job.hasShift()) throw new KitchenJobsException();
-        ShiftManager.getInstance().addKitchenJob(job, shift);
+        CatERing.getInstance().getShiftManager().addKitchenJob(job, shift);
         if (cook != null) job.setAssignedCook(cook);
+        this.notifyJobAssigned(job);
     }
 
     public void unassignJob(KitchenJob job) throws UseCaseLogicException {
         if (currentSummarySheet == null || !currentSummarySheet.containsJob(job) || !job.hasShift()) throw new UseCaseLogicException();
-        ShiftManager.getInstance().removeKitchenJob(job);
+        CatERing.getInstance().getShiftManager().removeKitchenJob(job);
         job.setAssignedCook(null);
+        this.notifyJobUnassigned(job);
     }
 
     public void assignJobInfo(KitchenJob job, Long time, Integer quantity) throws UseCaseLogicException {
         if (currentSummarySheet == null || !currentSummarySheet.containsJob(job)) throw new UseCaseLogicException();
         if (time != null) job.setTimeEstimate(time);
         if (quantity != null) job.setQuantity(quantity);
+        this.notifyJobInfoAssigned(job);
     }
 
     public List<KitchenShift> getKitchenShiftBoard() {
-        return ShiftManager.getInstance().getKitchenShiftBoard();
+        return CatERing.getInstance().getShiftManager().getKitchenShiftBoard();
     }
 
     public void setJobCompleted(KitchenJob job) throws UseCaseLogicException {
         if (currentSummarySheet == null || !currentSummarySheet.containsJob(job)) throw new UseCaseLogicException();
         job.setComplete();
+        this.notifyJobCompleted(job);
     }
 
     public void setShiftComplete(KitchenShift shift, boolean complete) {
-        ShiftManager.getInstance().setKitchenShiftComplete(shift, complete);
+        CatERing.getInstance().getShiftManager().setKitchenShiftComplete(shift, complete);
     }
 
     private void notifySummarySheetAdded(SummarySheet sheet) {

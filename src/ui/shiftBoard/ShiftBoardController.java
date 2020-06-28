@@ -4,7 +4,6 @@ import businesslogic.CatERing;
 import businesslogic.shift.KitchenShift;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -122,7 +121,7 @@ public class ShiftBoardController {
         Integer selectedDay = dayComboBox.getValue();
         if(selectedMonth != null && selectedDay != null){
             Date searchDate = new Date(2020,  monthToInt(selectedMonth),selectedDay);
-            List<KitchenShift> shiftBoard = CatERing.getInstance().getShiftMgr().getShiftBoard();
+            List<KitchenShift> shiftBoard = CatERing.getInstance().getShiftManager().getShiftBoard();
             List<KitchenShift> searchedShift =
                     shiftBoard.stream()
                             .filter(s -> {

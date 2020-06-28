@@ -47,7 +47,7 @@ public class EventInfo implements EventItemInfo {
 
     public static ObservableList<EventInfo> loadAllEventInfo() {
         ObservableList<EventInfo> all = FXCollections.observableArrayList();
-        String query = "SELECT * FROM Events WHERE true";
+        String query = "SELECT * FROM events";
         PersistenceManager.executeQuery(query, rs -> {
             String n = rs.getString("name");
             EventInfo e = new EventInfo(n);

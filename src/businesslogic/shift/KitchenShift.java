@@ -54,36 +54,52 @@ public class KitchenShift implements Comparable<KitchenShift> {
 
     public static void saveJobAssigned(KitchenJob j){
         String query =
-                "UPDATE KitchenJobs " +
-                "SET shift = " + j.getShift() +
+                "UPDATE kitchenjobs " +
+                "SET shift = " + j.getShift().getDate() +
                 "WHERE id = " + j.getId();
         PersistenceManager.executeUpdate(query);
+
+        query = "SELECT * FROM kitchenshifts WHERE id = " + j.getShift().getDate();
+        var obj = new Object() {boolean exists = false;};
+        PersistenceManager.executeQuery(query, rs -> {
+            obj.exists = true;
+        });
+
+        if (!obj.exists) {
+            String upd = "INSERT INTO kitchenshifts (date, `is complete`) VALUES ("+j.getShift().getDate()+", "+false+");";
+            PersistenceManager.executeUpdate(upd);
+        }
     }
 
     public static void deleteJobAssignment(KitchenJob j){
         String query =
-                "UPDATE KitchenJobs " +
+                "UPDATE kitchenjobs " +
                 "SET shift = NULL " +
                 "WHERE id = " + j.getId();
         PersistenceManager.executeUpdate(query);
     }
 
     public static KitchenShift loadKitchenShiftFromJob(Integer jobId, Timestamp id) {
-        String query = "SELECT * FROM KitchenShifts WHERE date = " + id;
+        String query = "SELECT * FROM kitchenshifts WHERE date = " + id;
         KitchenShift shift = new KitchenShift();
         PersistenceManager.executeQuery(query, rs -> {
             shift.date = id;
             shift.isComplete = rs.getBoolean("is complete");
         });
-        query = "SELECT cook FROM ShiftAvailableCooks WHERE shift = " + id;
+        query = "SELECT cook FROM shiftavailablecooks WHERE shift = " + id;
         List<Integer> ids = new ArrayList<>();
         PersistenceManager.executeQuery(query, rs -> ids.add(rs.getInt("cook")));
         for (Integer uid : ids) shift.availableCooks.add(User.loadUserById(uid));
-        query = "SELECT id FROM KitchenJobs WHERE shift = " + id;
+        query = "SELECT id FROM kitchenjobs WHERE shift = " + id;
         ids.clear();
         PersistenceManager.executeQuery(query, rs -> ids.add(rs.getInt("id")));
         ids.remove(jobId);
         for (Integer jid : ids) shift.jobs.add(KitchenJob.loadKitchenJobFromShift(shift, jid));
         return shift;
+    }
+
+    public static void saveShiftComplete(KitchenShift shift) {
+        String upd = "UPDATE kitchenshifts SER `is complete` = " + shift.isComplete + " WHERE date = " + shift.date;
+        PersistenceManager.executeUpdate(upd);
     }
 }

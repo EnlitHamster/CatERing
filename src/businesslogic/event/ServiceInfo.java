@@ -70,10 +70,10 @@ public class ServiceInfo implements EventItemInfo {
     public static ObservableList<ServiceInfo> loadServiceInfoForEvent(EventInfo event) {
         ObservableList<ServiceInfo> result = FXCollections.observableArrayList();
         String query = "SELECT id, name, service_date, time_start, time_end, expected_participants, approved_menu_id " +
-                "FROM Services WHERE event_id = " + event.getID();
-        ServiceInfo serv = new ServiceInfo();
+                "FROM services WHERE event_id = " + event.getID();
         var obj = new Object() {List<Integer> mids = new ArrayList<>();};
         PersistenceManager.executeQuery(query, rs -> {
+            ServiceInfo serv = new ServiceInfo();
             serv.event = event;
             serv.name = rs.getString("name");
             serv.id = rs.getInt("id");
@@ -86,7 +86,9 @@ public class ServiceInfo implements EventItemInfo {
         });
         for (int i = 0; i < result.size(); ++i)
             if (obj.mids.get(i) != 0) result.get(i).menu = Menu.loadMenuById(obj.mids.get(i));
-        serv.summarySheet = SummarySheet.loadSummarySheetByService(serv);
+
+        for (ServiceInfo serv : result)
+            serv.summarySheet = SummarySheet.loadSummarySheetByService(serv);
 
         return result;
     }

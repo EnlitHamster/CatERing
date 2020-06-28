@@ -95,13 +95,14 @@ public class KitchenJob {
     // STATIC METHODS FOR PERSISTENCE
 
     public static void deleteKitchenJob(KitchenJob job) {
-        String del = "DELETE FROM KitchenJobs WHERE id = " + job.id;
+        System.out.println(job.id);
+        String del = "DELETE FROM kitchenjobs WHERE id = " + job.id;
         PersistenceManager.executeUpdate(del);
         loadedJobs.remove(job.id);
     }
 
     public static void saveAllNewKitchenJobs(Integer serviceId, List<KitchenJob> jobs) {
-        String menuInsert = "INSERT INTO KitchenJobs (item task, service, position) VALUES (?, ?, ?);";
+        String menuInsert = "INSERT INTO kitchenjobs (`item task`, service, position) VALUES (?, ?, ?);";
         PersistenceManager.executeBatchUpdate(menuInsert, jobs.size(), new BatchUpdateHandler() {
             @Override
             public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
@@ -113,18 +114,15 @@ public class KitchenJob {
 
             @Override
             public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
-                // should be only one
-                if (count == 0) {
-                    KitchenJob job = jobs.get(count);
-                    job.id = rs.getInt(1);
-                    loadedJobs.put(job.id, job);
-                }
+                KitchenJob job = jobs.get(count);
+                job.id = rs.getInt(1);
+                loadedJobs.put(job.id, job);
             }
         });
     }
 
     public static void saveNewKitchenJob(Integer serviceId, KitchenJob job, Integer position) {
-        String menuInsert = "INSERT INTO KitchenJobs (item task, service, position) VALUES (?, ?, ?);";
+        String menuInsert = "INSERT INTO kitchenjobs (`item task`, service, position) VALUES (?, ?, ?);";
         PersistenceManager.executeBatchUpdate(menuInsert, 1, new BatchUpdateHandler() {
             @Override
             public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
@@ -145,31 +143,31 @@ public class KitchenJob {
     }
 
     public static void saveAssignment(KitchenJob job) {
-        String upd = "UPDATE KitchenJobs SET cook = " + (job.assignedCook == null ? "NULL" : "'" + job.assignedCook.getId() + "'") +
+        String upd = "UPDATE kitchenjobs SET cook = " + (job.assignedCook == null ? "NULL" : "'" + job.assignedCook.getId() + "'") +
                 " WHERE id = " + job.id;
         PersistenceManager.executeUpdate(upd);
     }
 
     public static void saveUnassignment(KitchenJob job) {
-        String upd = "UPDATE KitchenJobs SET cook = NULL" +
+        String upd = "UPDATE kitchenjobs SET cook = NULL" +
                 " WHERE id = " + job.id;
         PersistenceManager.executeUpdate(upd);
     }
 
     public static void saveInfoAssignment(KitchenJob job) {
-        String upd = "UPDATE KitchenJobs SET time estimate = '" + job.timeEstimate + "', quantity = '" + job.quantity + "'" +
+        String upd = "UPDATE kitchenjobs SET `time estimate` = '" + job.timeEstimate + "', quantity = '" + job.quantity + "'" +
                 " WHERE id = " + job.id;
         PersistenceManager.executeUpdate(upd);
     }
 
     public static void saveJobCompleted(KitchenJob job) {
-        String upd = "UPDATE KitchenJobs SET is complete = " + true + " WHERE id = " + job.id;
+        String upd = "UPDATE kitchenjobs SET `is complete` = " + true + " WHERE id = " + job.id;
         PersistenceManager.executeUpdate(upd);
     }
 
     public static KitchenJob loadKitchenJobFromShift(KitchenShift shift, Integer id) {
         if (loadedJobs.containsKey(id)) return loadedJobs.get(id);
-        String query = "SELECT * FROM KitchenJobs WHERE id = " + id;
+        String query = "SELECT * FROM kitchenjobs WHERE id = " + id;
         var obj = new Object() {Integer tid, uid;};
         KitchenJob job = new KitchenJob();
         job.id = id;
@@ -189,7 +187,7 @@ public class KitchenJob {
 
     public static KitchenJob loadKitchenJobById(Integer id) {
         if (loadedJobs.containsKey(id)) return loadedJobs.get(id);
-        String query = "SELECT * FROM KitchenJobs WHERE id = " + id;
+        String query = "SELECT * FROM kitchenjobs WHERE id = " + id;
         var obj = new Object() {Integer tid, uid; Timestamp date;};
         KitchenJob job = new KitchenJob();
         job.id = id;

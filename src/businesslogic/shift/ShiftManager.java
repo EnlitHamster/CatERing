@@ -1,10 +1,10 @@
 package businesslogic.shift;
 
 import businesslogic.kitchen.KitchenJob;
-import businesslogic.kitchen.KitchenJobsEventReceiver;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class ShiftManager {
     private static ShiftManager instance;
@@ -36,8 +36,15 @@ public class ShiftManager {
         }
     }
 
+    private void notifyKitchenShiftComplete(KitchenShift shift) {
+        for (ShiftEventReceiver er : eventReceivers) {
+            er.updateKitchenShiftComplete(shift);
+        }
+    }
+
     public void removeKitchenJob(KitchenJob job){
-        if(job.getShift() != null) job.getShift().removeJob(job);
+        job.getShift().removeJob(job);
+        this.notifyKitchenJobRemoved(job);
     }
 
     public void removeAllKitchenJob(Collection<KitchenJob> jobs){
@@ -56,10 +63,12 @@ public class ShiftManager {
 
     public void setKitchenShiftComplete(KitchenShift shift, boolean complete) {
         shift.setComplete(complete);
+        this.notifyKitchenShiftComplete(shift);
     }
 
     public void addKitchenJob(KitchenJob job, KitchenShift shift){
         shift.addJob(job);
+        this.notifyKitchenJobAdded(job);
     }
 
     public void addEventReceiver(ShiftEventReceiver rec) {
