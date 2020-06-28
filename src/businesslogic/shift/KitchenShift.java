@@ -2,17 +2,31 @@ package businesslogic.shift;
 
 import businesslogic.kitchen.KitchenJob;
 import businesslogic.user.User;
+import persistence.BatchUpdateHandler;
 import persistence.PersistenceManager;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class KitchenShift implements Comparable<KitchenShift> {
-    protected Timestamp date;
+    private static final Map<Integer, KitchenShift> loadedShifts = new HashMap<>();
+
+    private Integer id;
+    private Timestamp date;
     private boolean isComplete;
     private final List<KitchenJob> jobs;
     private final List<User> availableCooks;
+
+    @Override
+    public String toString() {
+        return date.toString();
+    }
 
     private KitchenShift() {
         jobs = new ArrayList<>();
@@ -20,6 +34,7 @@ public class KitchenShift implements Comparable<KitchenShift> {
     }
 
     public KitchenShift(Timestamp date){
+        id = 0;
         this.date = date;
         jobs = new ArrayList<>();
         availableCooks = new ArrayList<>();
@@ -55,18 +70,18 @@ public class KitchenShift implements Comparable<KitchenShift> {
     public static void saveJobAssigned(KitchenJob j){
         String query =
                 "UPDATE kitchenjobs " +
-                "SET shift = " + j.getShift().getDate() +
+                "SET shift = " + j.getShift().id + " " +
                 "WHERE id = " + j.getId();
+        System.out.println(query);
         PersistenceManager.executeUpdate(query);
 
-        query = "SELECT * FROM kitchenshifts WHERE id = " + j.getShift().getDate();
+        query = "SELECT * FROM kitchenshifts WHERE id = " + j.getShift().id;
         var obj = new Object() {boolean exists = false;};
-        PersistenceManager.executeQuery(query, rs -> {
-            obj.exists = true;
-        });
+        PersistenceManager.executeQuery(query, rs -> obj.exists = true);
 
         if (!obj.exists) {
-            String upd = "INSERT INTO kitchenshifts (date, `is complete`) VALUES ("+j.getShift().getDate()+", "+false+");";
+            String upd = "INSERT INTO kitchenshifts (id, date, `is complete`) " +
+                    "VALUES (" + j.getShift().id + ", " + j.getShift().date.getTime() + ", " + false + ");";
             PersistenceManager.executeUpdate(upd);
         }
     }
@@ -80,15 +95,62 @@ public class KitchenShift implements Comparable<KitchenShift> {
     }
 
     public static void saveNewKitchenShift(KitchenShift shift) {
-        String ins = "INSERT INTO kitchenshifts (date, `is complete`) VALUES (" + shift.date + ", " + shift.isComplete + ");";
-        PersistenceManager.executeUpdate(ins);
+        String ins = "INSERT INTO kitchenshifts (id, date, `is complete`) VALUES(?, ?, ?);";
+        PersistenceManager.executeBatchUpdate(ins, 1, new BatchUpdateHandler() {
+            @Override
+            public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
+                ps.setInt(1, shift.id);
+                ps.setTimestamp(2, shift.date);
+                ps.setBoolean(3, shift.isComplete);
+            }
+
+            @Override
+            public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
+                // should be only one
+                if (count == 0) {
+                    shift.id = rs.getInt(1);
+                }
+            }
+        });
+        loadedShifts.put(shift.id, shift);
     }
 
-    public static KitchenShift loadKitchenShiftFromJob(Integer jobId, Timestamp id) {
-        String query = "SELECT * FROM kitchenshifts WHERE date = " + id;
+    public static List<KitchenShift> loadAllKitchenShifts() {
+        String query = "SELECT * FROM kitchenshifts";
+        List<KitchenShift> shifts = new ArrayList<>();
+        PersistenceManager.executeQuery(query, rs -> {
+            Integer id = rs.getInt("id");
+            if (!loadedShifts.containsKey(id)) {
+                KitchenShift shift = new KitchenShift();
+                shift.id = id;
+                shift.date = rs.getTimestamp("date");
+                shift.isComplete = rs.getBoolean("is complete");
+                shifts.add(shift);
+                loadedShifts.put(id, shift);
+            }
+        });
+        for (KitchenShift shift : shifts) {
+            query = "SELECT cook FROM shiftavailablecooks WHERE shift = " + shift.id;
+            List<Integer> ids = new ArrayList<>();
+            PersistenceManager.executeQuery(query, rs -> ids.add(rs.getInt("cook")));
+            for (Integer uid : ids) shift.availableCooks.add(User.loadUserById(uid));
+        }
+        for (KitchenShift shift : shifts) {
+            query = "SELECT id FROM kitchenjobs WHERE shift = " + shift.id;
+            List<Integer> ids = new ArrayList<>();
+            PersistenceManager.executeQuery(query, rs -> ids.add(rs.getInt("id")));
+            for (Integer jid : ids) shift.jobs.add(KitchenJob.loadKitchenJobFromShift(shift, jid));
+        }
+        return new ArrayList<>(loadedShifts.values());
+    }
+
+    public static KitchenShift loadKitchenShiftFromJob(Integer jobId, Integer id) {
+        if (id == 0) return null;
+        if (loadedShifts.containsKey(id)) return loadedShifts.get(id);
+        String query = "SELECT * FROM kitchenshifts WHERE id = " + id;
         KitchenShift shift = new KitchenShift();
         PersistenceManager.executeQuery(query, rs -> {
-            shift.date = id;
+            shift.date = rs.getTimestamp("date");
             shift.isComplete = rs.getBoolean("is complete");
         });
         query = "SELECT cook FROM shiftavailablecooks WHERE shift = " + id;
@@ -104,7 +166,7 @@ public class KitchenShift implements Comparable<KitchenShift> {
     }
 
     public static void saveShiftComplete(KitchenShift shift) {
-        String upd = "UPDATE kitchenshifts SER `is complete` = " + shift.isComplete + " WHERE date = " + shift.date;
+        String upd = "UPDATE kitchenshifts SET `is complete` = " + shift.isComplete + " WHERE id = " + shift.id;
         PersistenceManager.executeUpdate(upd);
     }
 

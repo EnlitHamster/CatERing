@@ -10,6 +10,9 @@ import persistence.KitchenJobsPersistence;
 import persistence.MenuPersistence;
 import persistence.ShiftPersistence;
 
+import java.time.ZoneId;
+import java.util.TimeZone;
+
 public class CatERing {
     private static CatERing singleInstance;
 
@@ -31,6 +34,8 @@ public class CatERing {
     private final KitchenJobsPersistence kitchenJobsPersistence;
 
     private CatERing() {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC+2"));
+
         menuMgr = new MenuManager();
         recipeMgr = new KitchenTaskManager();
         userMgr = new UserManager();
@@ -40,9 +45,8 @@ public class CatERing {
         shiftPersistence = new ShiftPersistence();
         kitchenJobsPersistence = new KitchenJobsPersistence();
         menuMgr.addEventReceiver(menuPersistence);
-        // TODO: Uncomment for persistence
-        //ShiftManager.getInstance().addEventReceiver(shiftPersistence);
-        //kitchenMgr.addEventReceiver(kitchenJobsPersistence);
+        ShiftManager.getInstance().addEventReceiver(shiftPersistence);
+        kitchenMgr.addEventReceiver(kitchenJobsPersistence);
     }
 
     public MenuManager getMenuManager() {

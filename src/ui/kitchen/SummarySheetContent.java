@@ -210,11 +210,12 @@ public class SummarySheetContent {
             Pane pane = loader.load();
             AssignJobDialog controller = loader.getController();
             Stage stage = new Stage();
-            controller.init(stage);
+            controller.init(stage, getCurrentJob());
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(pane));
             stage.setTitle("Modifica assegnamento");
             stage.showAndWait();
+            refreshCurrentJob();
         } catch (IOException ex) {
             ex.printStackTrace();
         }

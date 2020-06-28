@@ -64,11 +64,11 @@ public class ShiftManager {
         }
     }
 
-    private List<KitchenShift> shifts;
+    private final List<KitchenShift> shifts;
     private final List<ShiftEventReceiver> eventReceivers;
 
-    public ShiftManager(){
-        shifts = new ArrayList<>();
+    private ShiftManager(){
+        shifts = KitchenShift.loadAllKitchenShifts();
         eventReceivers = new ArrayList<>();
     }
 
@@ -138,6 +138,7 @@ public class ShiftManager {
     }
 
     public KitchenShift createKitchenShift(Timestamp date) {
+        System.out.println("Creating");
         KitchenShift shift = new KitchenShift(date);
         shifts.add(shift);
         this.notifyKitchenShiftAdded(shift);

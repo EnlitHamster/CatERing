@@ -1,7 +1,9 @@
 package ui.kitchen;
 
 import businesslogic.CatERing;
+import businesslogic.UseCaseLogicException;
 import businesslogic.kitchen.KitchenJob;
+import businesslogic.kitchen.KitchenJobsException;
 import businesslogic.shift.KitchenShift;
 import businesslogic.user.User;
 import javafx.collections.FXCollections;
@@ -63,11 +65,18 @@ public class AssignJobDialog {
             shiftDate.set(Calendar.DAY_OF_MONTH, selectedDay);
             shiftDate.set(Calendar.HOUR_OF_DAY, selectedHour);
             KitchenShift shift = CatERing.getInstance().getShiftManager().getKitchenShift(shiftDate);
-            if (shift == null) shift = new KitchenShift(new Timestamp(shiftDate.getTimeInMillis()));
-
-
-            //shift = creare un turno
-            //CatERing.getInstance().getKitchenManager().assignJob(job, cookToAssign, shiftToAssign);
+            if (shift == null) shift = CatERing.getInstance().getShiftManager().createKitchenShift(new Timestamp(shiftDate.getTimeInMillis()));
+            try {
+                CatERing.getInstance().getKitchenManager().assignJob(job, shift, cookToAssign);
+            } catch (UseCaseLogicException e) {
+                e.printStackTrace();
+            } catch (KitchenJobsException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Impossibile assegnare il cuoco al turno");
+                alert.showAndWait();
+                error = true;
+                e.printStackTrace();
+            }
         }
+        if (!error) myStage.close();
     }
 }

@@ -76,12 +76,14 @@ public class User {
             User cook = new User();
             cook.id = rs.getInt("id");
             cook.username = rs.getString("username");
+            cook.roles.add(Role.CUOCO);
             loadedCooks.add(cook);
         });
         return loadedCooks;
     }
 
     public static User loadUserById(int uid) {
+        if (uid == 0) return null;
         if (loadedUsers.containsKey(uid)) return loadedUsers.get(uid);
 
         User load = new User();

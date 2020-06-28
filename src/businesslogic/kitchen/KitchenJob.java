@@ -143,13 +143,13 @@ public class KitchenJob {
     }
 
     public static void saveAssignment(KitchenJob job) {
-        String upd = "UPDATE kitchenjobs SET cook = " + (job.assignedCook == null ? "NULL" : "'" + job.assignedCook.getId() + "'") +
+        String upd = "UPDATE kitchenjobs SET `assigned cook` = " + (job.assignedCook == null ? "NULL" : "'" + job.assignedCook.getId() + "'") +
                 " WHERE id = " + job.id;
         PersistenceManager.executeUpdate(upd);
     }
 
     public static void saveUnassignment(KitchenJob job) {
-        String upd = "UPDATE kitchenjobs SET cook = NULL" +
+        String upd = "UPDATE kitchenjobs SET `assigned cook` = NULL" +
                 " WHERE id = " + job.id;
         PersistenceManager.executeUpdate(upd);
     }
@@ -188,7 +188,7 @@ public class KitchenJob {
     public static KitchenJob loadKitchenJobById(Integer id) {
         if (loadedJobs.containsKey(id)) return loadedJobs.get(id);
         String query = "SELECT * FROM kitchenjobs WHERE id = " + id;
-        var obj = new Object() {Integer tid, uid; Timestamp date;};
+        var obj = new Object() {Integer tid, uid, sid;};
         KitchenJob job = new KitchenJob();
         job.id = id;
         PersistenceManager.executeQuery(query, rs -> {
@@ -196,11 +196,11 @@ public class KitchenJob {
             job.quantity = rs.getInt("quantity");
             job.isComplete = rs.getBoolean("is complete");
             obj.uid = rs.getInt("assigned cook");
-            obj.date = rs.getTimestamp("shift");
+            obj.sid = rs.getInt("shift");
             obj.tid = rs.getInt("item task");
         });
         job.assignedCook = User.loadUserById(obj.uid);
-        job.shift = KitchenShift.loadKitchenShiftFromJob(id, obj.date);
+        job.shift = KitchenShift.loadKitchenShiftFromJob(id, obj.sid);
         job.itemTask = KitchenTask.loadTaskById(obj.tid);
         loadedJobs.put(job.id, job);
         return job;
