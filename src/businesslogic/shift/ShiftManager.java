@@ -132,8 +132,8 @@ public class ShiftManager {
         this.notifyKitchenShiftComplete(shift);
     }
 
-    public void addKitchenJob(KitchenJob job, KitchenShift shift){
-        shift.addJob(job);
+    public void addKitchenJob(KitchenJob job){
+        job.getShift().addJob(job);
         this.notifyKitchenJobAdded(job);
     }
 

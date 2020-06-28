@@ -1,11 +1,10 @@
 package ui.kitchen;
 
 import businesslogic.CatERing;
+import businesslogic.UseCaseLogicException;
 import businesslogic.kitchen.KitchenJob;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -22,23 +21,27 @@ public class ModifyDialog {
 
     public void okPressed() {
         try {
+            Integer pQuantity = null;
             if (!quantity.getText().isEmpty() && !quantity.getText().isBlank()) {
-                int p = Integer.parseInt(quantity.getText());
-                if (p < 0) throw new IllegalArgumentException();
-                workingJob.setQuantity(p);
+                pQuantity = Integer.parseInt(quantity.getText());
+                if (pQuantity < 0) throw new IllegalArgumentException();
             }
 
+            Long pEstimate = null;
             if (!estimate.getText().isEmpty() && !estimate.getText().isBlank()) {
-                long p = Long.parseLong(estimate.getText());
-                if (p < 0) throw new IllegalArgumentException();
-                workingJob.setTimeEstimate(p);
+                pEstimate = Long.parseLong(estimate.getText());
+                if (pEstimate < 0) throw new IllegalArgumentException();
             }
 
+            CatERing.getInstance().getKitchenManager().assignJobInfo(workingJob, pEstimate, pQuantity);
             myStage.close();
         }
         catch (IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.WARNING, "Quantità e Stima tempo devono essere interi positivi");
             alert.showAndWait();
+            e.printStackTrace();
+        } catch (UseCaseLogicException e) {
+            e.printStackTrace();
         }
     }
 

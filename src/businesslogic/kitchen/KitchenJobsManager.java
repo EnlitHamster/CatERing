@@ -86,7 +86,7 @@ public class KitchenJobsManager {
         if (currentSummarySheet == null || !currentSummarySheet.containsJob(job)) throw new UseCaseLogicException();
         if (cook != null && (!cook.isCook() || !shift.isAvailable(cook))) throw new KitchenJobsException();
         job.setShift(shift);
-        CatERing.getInstance().getShiftManager().addKitchenJob(job, shift);
+        CatERing.getInstance().getShiftManager().addKitchenJob(job);
         if (cook != null) job.setAssignedCook(cook);
         this.notifyJobAssigned(job);
     }
