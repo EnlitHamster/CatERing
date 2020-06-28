@@ -47,6 +47,9 @@ public class KitchenShift implements Comparable<KitchenShift> {
         isComplete = b;
     }
 
+    public List<User> getAvailableCooks(){return availableCooks;}
+    public List<KitchenJob> getJobs(){return jobs;}
+
     // STATIC METHODS FOR PERSISTENCE
 
     public static void saveJobAssigned(KitchenJob j){

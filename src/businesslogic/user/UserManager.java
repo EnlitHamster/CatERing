@@ -1,5 +1,8 @@
 package businesslogic.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserManager {
     private User currentUser;
 
@@ -10,5 +13,9 @@ public class UserManager {
 
     public User getCurrentUser() {
         return this.currentUser;
+    }
+
+    public List<User> getAllCooks() {
+        return User.loadAllCooks();
     }
 }

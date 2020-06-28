@@ -142,8 +142,8 @@
                     </rowConstraints>
                      <children>
                         <Button fx:id="modifyInfoButton" disable="true" mnemonicParsing="false" onAction="#modifyInfoPressed" text="Modifica Info" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
-                        <Button disable="true" mnemonicParsing="false" text="Modifica Assegnamento" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                        <Button disable="true" mnemonicParsing="false" text="Elimina Assegnamento" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                        <Button fx:id="modifyAssignmentButton" onAction="#modifyAssignmentButtonPressed" disable="true" mnemonicParsing="false" text="Modifica Assegnamento" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <Button fx:id="deleteAssignmentButton" onAction="#deleteAssignmentBUttonPressed" disable="true" mnemonicParsing="false" text="Elimina Assegnamento" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                         <Button fx:id="setCompletedButton" onAction="#setCompletedButtonPressed" disable="true" mnemonicParsing="false" text="Marca disponibile" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>

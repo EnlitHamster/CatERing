@@ -37,6 +37,8 @@ public class SummarySheetContent {
     @FXML TextField isCompleteField;
     @FXML Button addJobButton;
     @FXML Button removeJobButton;
+    @FXML Button modifyAssignmentButton;
+    @FXML Button deleteAssignmentButton;
 
     private KitchenJobsManager getKitchenManager(){
         return CatERing.getInstance().getKitchenManager();
@@ -81,6 +83,8 @@ public class SummarySheetContent {
             isCompleteField.setText(currJob.isComplete() ? "si'" : "no");
             modifyInfoButton.setDisable(false);
             setCompletedButton.setDisable(currJob.isComplete());
+            modifyAssignmentButton.setDisable(false);
+            deleteAssignmentButton.setDisable(false);
         }
         else{
             cookField.setText("");
@@ -90,6 +94,8 @@ public class SummarySheetContent {
             isCompleteField.setText("");
             modifyInfoButton.setDisable(true);
             setCompletedButton.setDisable(true);
+            deleteAssignmentButton.setDisable(true);
+            modifyAssignmentButton.setDisable(true);
         }
     }
 
@@ -195,6 +201,31 @@ public class SummarySheetContent {
             stage.showAndWait();
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public void modifyAssignmentButtonPressed() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("summarySheet-assignJob.fxml"));
+        try {
+            Pane pane = loader.load();
+            AssignJobDialog controller = loader.getController();
+            Stage stage = new Stage();
+            controller.init(stage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(pane));
+            stage.setTitle("Modifica assegnamento");
+            stage.showAndWait();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void deleteAssignmentBUttonPressed() {
+        try {
+            getKitchenManager().unassignJob(getCurrentJob());
+            refreshCurrentJob();
+        } catch (UseCaseLogicException e) {
+            e.printStackTrace();
         }
     }
 }

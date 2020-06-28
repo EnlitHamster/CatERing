@@ -11,9 +11,9 @@
 <?import javafx.scene.text.Font?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.shiftBoard.ShiftInfoController">
    <top>
-      <Label text="Info Turno" BorderPane.alignment="CENTER_LEFT">
+      <Label fx:id="shiftInfoLabel" text="Info Turno" BorderPane.alignment="CENTER_LEFT">
          <font>
             <Font size="24.0" />
          </font>
@@ -41,7 +41,7 @@
                   </Label>
                </top>
                <center>
-                  <ListView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                  <ListView fx:id="assignedJobList" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
                </center>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" />
@@ -49,14 +49,14 @@
             </BorderPane>
             <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                <top>
-                  <Label text="Lavori assegnati" BorderPane.alignment="CENTER">
+                  <Label text="Cuochi disponibili" BorderPane.alignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
                </top>
                <center>
-                  <ListView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                  <ListView fx:id="availableCooks" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
                </center>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" />
@@ -69,7 +69,7 @@
       </GridPane>
    </center>
    <bottom>
-      <Button mnemonicParsing="false" text="Chiudi" BorderPane.alignment="CENTER">
+      <Button onAction="#close" mnemonicParsing="false" text="Chiudi" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </BorderPane.margin>

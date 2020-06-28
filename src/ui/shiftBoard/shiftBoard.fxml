@@ -21,17 +21,17 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ComboBox fx:id="monthComboBox" prefWidth="150.0" promptText="Mese">
+            <ComboBox fx:id="monthComboBox" onAction="#monthSelected" prefWidth="150.0" promptText="Mese">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </ComboBox>
-            <ComboBox fx:id="dayComboBox" prefWidth="150.0" promptText="Giorno" GridPane.columnIndex="1">
+            <ComboBox fx:id="dayComboBox" onAction="#daySelected" prefWidth="150.0" promptText="Giorno" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </ComboBox>
-            <Button mnemonicParsing="false" text="Cerca" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+            <Button fx:id="findButton" disable="true" onAction = "#findButtonPressed" mnemonicParsing="false" text="Cerca" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -40,7 +40,7 @@
       </GridPane>
    </top>
    <center>
-      <ListView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <ListView fx:id="shiftList" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
       <GridPane BorderPane.alignment="CENTER">
@@ -53,12 +53,12 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" text="Apri" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+            <Button fx:id="openButton" onAction="#openButtonPressed" disable="true" mnemonicParsing="false" text="Apri" GridPane.columnIndex="1" GridPane.halignment="CENTER">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Button>
-            <Button mnemonicParsing="false" text="Chiudi" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+            <Button mnemonicParsing="false" text="Chiudi" onAction="#close" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin>

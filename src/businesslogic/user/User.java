@@ -67,6 +67,20 @@ public class User {
 
     // STATIC METHODS FOR PERSISTENCE
 
+    public static List<User> loadAllCooks(){
+        List<User> loadedCooks = new ArrayList<User>();
+        String userQuery =
+                "SELECT id, username FROM Users, UserRoles " +
+                "WHERE id = user_id and role_id = 'c'";
+        PersistenceManager.executeQuery(userQuery, rs -> {
+            User cook = new User();
+            cook.id = rs.getInt("id");
+            cook.username = rs.getString("username");
+            loadedCooks.add(cook);
+        });
+        return loadedCooks;
+    }
+
     public static User loadUserById(int uid) {
         if (loadedUsers.containsKey(uid)) return loadedUsers.get(uid);
 
