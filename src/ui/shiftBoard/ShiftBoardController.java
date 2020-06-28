@@ -16,7 +16,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ShiftBoardController {
@@ -27,7 +30,7 @@ public class ShiftBoardController {
     @FXML ComboBox<Integer> dayComboBox;
     private Stage myStage;
 
-    private static String[] month = {
+    private static final String[] month = {
             "Gen",
             "Feb",
             "Mar",
@@ -86,8 +89,6 @@ public class ShiftBoardController {
         }));
     }
 
-    private KitchenShift searchedShift;
-
     public void monthSelected() {
         findButton.setDisable(monthComboBox.getValue() == null || dayComboBox.getValue() == null);
     }
@@ -120,14 +121,16 @@ public class ShiftBoardController {
         String selectedMonth = monthComboBox.getValue();
         Integer selectedDay = dayComboBox.getValue();
         if(selectedMonth != null && selectedDay != null){
-            Date searchDate = new Date(2020,  monthToInt(selectedMonth),selectedDay);
+            Calendar searchDate = Calendar.getInstance();
+            searchDate.set(2020, monthToInt(selectedMonth), selectedDay);
             List<KitchenShift> shiftBoard = CatERing.getInstance().getShiftManager().getShiftBoard();
             List<KitchenShift> searchedShift =
                     shiftBoard.stream()
                             .filter(s -> {
-                                Date shiftDate = new Date(s.getDate().getTime());
-                                return shiftDate.getDay() == searchDate.getDay()
-                                        && shiftDate.getMonth() == searchDate.getMonth();
+                                Calendar shiftDate = Calendar.getInstance();
+                                shiftDate.setTimeInMillis(s.getDate().getTime());
+                                return shiftDate.get(Calendar.DAY_OF_MONTH) == searchDate.get(Calendar.DAY_OF_MONTH)
+                                        && shiftDate.get(Calendar.MONTH) == searchDate.get(Calendar.MONTH);
                             }).collect(Collectors.toList());
             ObservableList<ShiftListItem> shiftListItems = FXCollections.observableArrayList();
             for (int i = 0; i <= 23; i++){
@@ -142,8 +145,9 @@ public class ShiftBoardController {
 
     private KitchenShift findShiftThatMatchHour(List<KitchenShift> searchedShift, int i) {
         for(KitchenShift s: searchedShift){
-            Date shiftDate = new Date(s.getDate().getTime());
-            if(shiftDate.getHours() == i) return s;
+            Calendar shiftDate = Calendar.getInstance();
+            shiftDate.setTimeInMillis(s.getDate().getTime());
+            if(shiftDate.get(Calendar.HOUR_OF_DAY) == i) return s;
         }
         return null;
     }
