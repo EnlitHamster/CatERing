@@ -1,10 +1,12 @@
 package ui.kitchen;
 
 import businesslogic.CatERing;
+import businesslogic.kitchen.KitchenJob;
 import businesslogic.user.User;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
@@ -19,6 +21,7 @@ public class AssignJobDialog {
     @FXML ComboBox<Integer> dayComboBox;
     @FXML ComboBox<Integer> hourComboBox;
     private Stage myStage;
+    private KitchenJob job;
 
     private static String[] month = {
             "Gen",
@@ -66,8 +69,9 @@ public class AssignJobDialog {
         }
     }
 
-    public void init(Stage stage){
+    public void init(Stage stage, KitchenJob workingJob){
         myStage = stage;
+        job = workingJob;
         monthComboBox.setItems(FXCollections.observableList(Arrays.asList(month)));
         ArrayList<Integer> days = new ArrayList<>();
         for (int i = 1; i <= 31; i++) days.add(i);
@@ -81,5 +85,22 @@ public class AssignJobDialog {
 
     public void cancelButtonPressed(ActionEvent actionEvent) {
         myStage.close();
+    }
+
+    public void assignButtonPressed(ActionEvent actionEvent) {
+        User cookToAssign = cookComboBox.getValue();
+        String selectedMonth = monthComboBox.getValue();
+        Integer selectedDay = dayComboBox.getValue();
+        Integer selectedHour = hourComboBox.getValue();
+        boolean error = false;
+        if(selectedDay == null || selectedMonth == null || selectedHour == null){
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Mese, giorno e ora devono essere selezionati");
+            alert.showAndWait();
+            error = true;
+        }
+        if(!error){
+            //shift = creare un turno
+            //CatERing.getInstance().getKitchenManager().assignJob(job, cookToAssign, shiftToAssign);
+        }
     }
 }
