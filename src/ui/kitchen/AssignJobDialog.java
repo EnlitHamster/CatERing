@@ -2,6 +2,7 @@ package ui.kitchen;
 
 import businesslogic.CatERing;
 import businesslogic.kitchen.KitchenJob;
+import businesslogic.shift.KitchenShift;
 import businesslogic.user.User;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -10,10 +11,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+
+import static businesslogic.shift.ShiftManager.month;
+import static businesslogic.shift.ShiftManager.monthToInt;
 
 public class AssignJobDialog {
     @FXML ComboBox<User> cookComboBox;
@@ -22,52 +27,6 @@ public class AssignJobDialog {
     @FXML ComboBox<Integer> hourComboBox;
     private Stage myStage;
     private KitchenJob job;
-
-    private static String[] month = {
-            "Gen",
-            "Feb",
-            "Mar",
-            "Apr",
-            "Mag",
-            "Giu",
-            "Lug",
-            "Ago",
-            "Set",
-            "Ott",
-            "Nov",
-            "Dic"
-    };
-
-    private static int monthToInt(String month){
-        switch (month) {
-            case "Gen":
-                return Calendar.JANUARY;
-            case "Feb":
-                return Calendar.FEBRUARY;
-            case "Mar":
-                return Calendar.MARCH;
-            case "Apr":
-                return Calendar.APRIL;
-            case "Mag":
-                return Calendar.MAY;
-            case "Giu":
-                return Calendar.JUNE;
-            case "Lug":
-                return Calendar.JULY;
-            case "Ago":
-                return Calendar.AUGUST;
-            case "Set":
-                return Calendar.SEPTEMBER;
-            case "Ott":
-                return Calendar.OCTOBER;
-            case "Nov":
-                return Calendar.NOVEMBER;
-            case "Dic":
-                return Calendar.DECEMBER;
-            default:
-                return -1;
-        }
-    }
 
     public void init(Stage stage, KitchenJob workingJob){
         myStage = stage;
@@ -98,7 +57,15 @@ public class AssignJobDialog {
             alert.showAndWait();
             error = true;
         }
-        if(!error){
+        if(!error) {
+            Calendar shiftDate = Calendar.getInstance();
+            shiftDate.set(Calendar.MONTH, monthToInt(selectedMonth));
+            shiftDate.set(Calendar.DAY_OF_MONTH, selectedDay);
+            shiftDate.set(Calendar.HOUR_OF_DAY, selectedHour);
+            KitchenShift shift = CatERing.getInstance().getShiftManager().getKitchenShift(shiftDate);
+            if (shift == null) shift = new KitchenShift(new Timestamp(shiftDate.getTimeInMillis()));
+
+
             //shift = creare un turno
             //CatERing.getInstance().getKitchenManager().assignJob(job, cookToAssign, shiftToAssign);
         }

@@ -22,6 +22,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static businesslogic.shift.ShiftManager.month;
+import static businesslogic.shift.ShiftManager.monthToInt;
+
 public class ShiftBoardController {
     @FXML Button openButton;
     @FXML ListView<ShiftListItem> shiftList;
@@ -29,52 +32,6 @@ public class ShiftBoardController {
     @FXML ComboBox<String> monthComboBox;
     @FXML ComboBox<Integer> dayComboBox;
     private Stage myStage;
-
-    private static final String[] month = {
-            "Gen",
-            "Feb",
-            "Mar",
-            "Apr",
-            "Mag",
-            "Giu",
-            "Lug",
-            "Ago",
-            "Set",
-            "Ott",
-            "Nov",
-            "Dic"
-    };
-
-    private static int monthToInt(String month){
-        switch (month) {
-            case "Gen":
-                return Calendar.JANUARY;
-            case "Feb":
-                return Calendar.FEBRUARY;
-            case "Mar":
-                return Calendar.MARCH;
-            case "Apr":
-                return Calendar.APRIL;
-            case "Mag":
-                return Calendar.MAY;
-            case "Giu":
-                return Calendar.JUNE;
-            case "Lug":
-                return Calendar.JULY;
-            case "Ago":
-                return Calendar.AUGUST;
-            case "Set":
-                return Calendar.SEPTEMBER;
-            case "Ott":
-                return Calendar.OCTOBER;
-            case "Nov":
-                return Calendar.NOVEMBER;
-            case "Dic":
-                return Calendar.DECEMBER;
-            default:
-                return -1;
-        }
-    }
 
     public void init(Stage stage) {
         ArrayList<Integer> days = new ArrayList<>();

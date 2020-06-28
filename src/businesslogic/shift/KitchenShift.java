@@ -79,6 +79,11 @@ public class KitchenShift implements Comparable<KitchenShift> {
         PersistenceManager.executeUpdate(query);
     }
 
+    public static void saveNewKitchenShift(KitchenShift shift) {
+        String ins = "INSERT INTO kitchenshifts (date, `is complete`) VALUES (" + shift.date + ", " + shift.isComplete + ");";
+        PersistenceManager.executeUpdate(ins);
+    }
+
     public static KitchenShift loadKitchenShiftFromJob(Integer jobId, Timestamp id) {
         String query = "SELECT * FROM kitchenshifts WHERE date = " + id;
         KitchenShift shift = new KitchenShift();

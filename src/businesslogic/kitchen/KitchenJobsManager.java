@@ -94,6 +94,7 @@ public class KitchenJobsManager {
     public void unassignJob(KitchenJob job) throws UseCaseLogicException {
         if (currentSummarySheet == null || !currentSummarySheet.containsJob(job) || !job.hasShift()) throw new UseCaseLogicException();
         CatERing.getInstance().getShiftManager().removeKitchenJob(job);
+        job.setShift(null);
         job.setAssignedCook(null);
         this.notifyJobUnassigned(job);
     }
