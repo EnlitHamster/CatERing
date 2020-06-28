@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.1
+-- version 4.8.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Giu 27, 2020 alle 16:45
--- Versione del server: 10.4.8-MariaDB
--- Versione PHP: 7.1.32
+-- Creato il: Giu 28, 2020 alle 18:34
+-- Versione del server: 10.1.32-MariaDB
+-- Versione PHP: 7.2.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -57,13 +57,25 @@ CREATE TABLE `kitchenjobs` (
   `id` int(11) NOT NULL,
   `time estimate` bigint(20) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
-  `is complete` tinyint(1) DEFAULT 0,
+  `is complete` tinyint(1) DEFAULT '0',
   `assigned cook` int(11) DEFAULT NULL,
-  `shift` datetime DEFAULT NULL,
+  `shift` int(11) DEFAULT NULL,
   `item task` int(11) DEFAULT NULL,
   `service` int(11) NOT NULL,
   `position` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `kitchenjobs`
+--
+
+INSERT INTO `kitchenjobs` (`id`, `time estimate`, `quantity`, `is complete`, `assigned cook`, `shift`, `item task`, `service`, `position`) VALUES
+(1, NULL, NULL, 0, NULL, NULL, 9, 2, 0),
+(2, NULL, NULL, 0, NULL, NULL, 9, 2, 1),
+(3, NULL, NULL, 0, NULL, NULL, 10, 2, 2),
+(4, NULL, NULL, 0, NULL, NULL, 11, 2, 3),
+(6, NULL, NULL, 0, NULL, NULL, 12, 2, 4),
+(7, NULL, NULL, 0, NULL, NULL, 12, 2, 5);
 
 -- --------------------------------------------------------
 
@@ -72,9 +84,17 @@ CREATE TABLE `kitchenjobs` (
 --
 
 CREATE TABLE `kitchenshifts` (
-  `date` datetime NOT NULL,
-  `is complete` tinyint(1) NOT NULL DEFAULT 0
+  `id` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `is complete` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `kitchenshifts`
+--
+
+INSERT INTO `kitchenshifts` (`id`, `date`, `is complete`) VALUES
+(5, '2020-09-10 08:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -84,10 +104,10 @@ CREATE TABLE `kitchenshifts` (
 
 CREATE TABLE `kitchentasks` (
   `id` int(11) NOT NULL,
-  `name` tinytext DEFAULT NULL,
-  `is recipe` tinyint(1) NOT NULL DEFAULT 1,
-  `notes` text DEFAULT NULL,
-  `tags` text DEFAULT NULL
+  `name` tinytext,
+  `is recipe` tinyint(1) NOT NULL DEFAULT '1',
+  `notes` text,
+  `tags` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -125,7 +145,7 @@ INSERT INTO `kitchentasks` (`id`, `name`, `is recipe`, `notes`, `tags`) VALUES
 CREATE TABLE `menufeatures` (
   `menu_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL DEFAULT '',
-  `value` tinyint(1) DEFAULT 0
+  `value` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -147,7 +167,12 @@ INSERT INTO `menufeatures` (`menu_id`, `name`, `value`) VALUES
 (86, 'Buffet', 0),
 (86, 'Richiede cucina', 0),
 (86, 'Finger food', 0),
-(86, 'Piatti caldi', 0);
+(86, 'Piatti caldi', 0),
+(87, 'Richiede cuoco', 1),
+(87, 'Buffet', 1),
+(87, 'Richiede cucina', 1),
+(87, 'Finger food', 1),
+(87, 'Piatti caldi', 1);
 
 -- --------------------------------------------------------
 
@@ -159,7 +184,7 @@ CREATE TABLE `menuitems` (
   `id` int(11) NOT NULL,
   `menu_id` int(11) NOT NULL,
   `section_id` int(11) DEFAULT NULL,
-  `description` tinytext DEFAULT NULL,
+  `description` tinytext,
   `recipe_id` int(11) NOT NULL,
   `position` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -190,7 +215,14 @@ INSERT INTO `menuitems` (`id`, `menu_id`, `section_id`, `description`, `recipe_i
 (120, 86, 0, 'Vitello tonnato', 1, 0),
 (121, 86, 0, 'Carpaccio di spada', 2, 1),
 (122, 86, 0, 'Alici marinate', 3, 2),
-(123, 86, 0, 'Salmone al forno', 8, 0);
+(123, 86, 0, 'Salmone al forno', 8, 0),
+(124, 87, 46, 'Vitello tonnato', 1, 0),
+(125, 87, 46, 'Carpaccio di spada', 2, 1),
+(126, 87, 46, 'Alici marinate', 3, 2),
+(127, 87, 46, 'Insalata di riso', 4, 3),
+(128, 87, 0, 'Risotto alla zucca', 20, 0),
+(129, 87, 0, 'Torta Saint Honoré', 19, 1),
+(130, 87, 0, 'Sorbetto al limone', 18, 2);
 
 -- --------------------------------------------------------
 
@@ -200,9 +232,9 @@ INSERT INTO `menuitems` (`id`, `menu_id`, `section_id`, `description`, `recipe_i
 
 CREATE TABLE `menus` (
   `id` int(11) NOT NULL,
-  `title` tinytext DEFAULT NULL,
+  `title` tinytext,
   `owner_id` int(11) DEFAULT NULL,
-  `published` tinyint(1) DEFAULT 0
+  `published` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -212,7 +244,8 @@ CREATE TABLE `menus` (
 INSERT INTO `menus` (`id`, `title`, `owner_id`, `published`) VALUES
 (80, 'Coffee break mattutino', 2, 1),
 (82, 'Coffee break pomeridiano', 2, 1),
-(86, 'Cena di compleanno pesce', 3, 1);
+(86, 'Cena di compleanno pesce', 3, 1),
+(87, 'Obladì Obladà', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -223,7 +256,7 @@ INSERT INTO `menus` (`id`, `title`, `owner_id`, `published`) VALUES
 CREATE TABLE `menusections` (
   `id` int(11) NOT NULL,
   `menu_id` int(11) NOT NULL,
-  `name` tinytext DEFAULT NULL,
+  `name` tinytext,
   `position` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -234,7 +267,8 @@ CREATE TABLE `menusections` (
 INSERT INTO `menusections` (`id`, `menu_id`, `name`, `position`) VALUES
 (42, 86, 'Primi', 1),
 (44, 86, 'Dessert', 3),
-(45, 87, 'Antipasti', 0);
+(45, 87, 'Antipasti', 0),
+(46, 87, 'Antipasti', 0);
 
 -- --------------------------------------------------------
 
@@ -267,8 +301,8 @@ CREATE TABLE `services` (
   `id` int(11) NOT NULL,
   `event_id` int(11) NOT NULL,
   `name` varchar(128) DEFAULT NULL,
-  `proposed_menu_id` int(11) NOT NULL DEFAULT 0,
-  `approved_menu_id` int(11) DEFAULT 0,
+  `proposed_menu_id` int(11) NOT NULL DEFAULT '0',
+  `approved_menu_id` int(11) DEFAULT '0',
   `service_date` date DEFAULT NULL,
   `time_start` time DEFAULT NULL,
   `time_end` time DEFAULT NULL,
@@ -296,9 +330,16 @@ INSERT INTO `services` (`id`, `event_id`, `name`, `proposed_menu_id`, `approved_
 --
 
 CREATE TABLE `shiftavailablecooks` (
-  `shift` datetime NOT NULL,
+  `shift` int(11) NOT NULL,
   `cook` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `shiftavailablecooks`
+--
+
+INSERT INTO `shiftavailablecooks` (`shift`, `cook`) VALUES
+(5, 4);
 
 -- --------------------------------------------------------
 
@@ -392,7 +433,7 @@ ALTER TABLE `kitchenjobs`
 -- Indici per le tabelle `kitchenshifts`
 --
 ALTER TABLE `kitchenshifts`
-  ADD PRIMARY KEY (`date`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indici per le tabelle `kitchentasks`
@@ -465,7 +506,13 @@ ALTER TABLE `events`
 -- AUTO_INCREMENT per la tabella `kitchenjobs`
 --
 ALTER TABLE `kitchenjobs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT per la tabella `kitchenshifts`
+--
+ALTER TABLE `kitchenshifts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT per la tabella `kitchentasks`
@@ -477,19 +524,19 @@ ALTER TABLE `kitchentasks`
 -- AUTO_INCREMENT per la tabella `menuitems`
 --
 ALTER TABLE `menuitems`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
 
 --
 -- AUTO_INCREMENT per la tabella `menus`
 --
 ALTER TABLE `menus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT per la tabella `menusections`
 --
 ALTER TABLE `menusections`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT per la tabella `services`
@@ -513,7 +560,6 @@ ALTER TABLE `users`
 ALTER TABLE `kitchenjobs`
   ADD CONSTRAINT `kitchenjobs_ibfk_1` FOREIGN KEY (`assigned cook`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `kitchenjobs_ibfk_2` FOREIGN KEY (`item task`) REFERENCES `kitchentasks` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `kitchenjobs_ibfk_3` FOREIGN KEY (`shift`) REFERENCES `kitchenshifts` (`date`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `kitchenjobs_ibfk_4` FOREIGN KEY (`service`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
@@ -526,8 +572,8 @@ ALTER TABLE `services`
 -- Limiti per la tabella `shiftavailablecooks`
 --
 ALTER TABLE `shiftavailablecooks`
-  ADD CONSTRAINT `shiftavailablecooks_ibfk_1` FOREIGN KEY (`shift`) REFERENCES `kitchenshifts` (`date`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `shiftavailablecooks_ibfk_2` FOREIGN KEY (`cook`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `shiftavailablecooks_ibfk_2` FOREIGN KEY (`cook`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `shiftavailablecooks_ibfk_3` FOREIGN KEY (`shift`) REFERENCES `kitchenshifts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limiti per la tabella `usedpreparations`
