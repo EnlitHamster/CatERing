@@ -52,6 +52,7 @@ public class SummarySheetList {
         }
         kitchenManagementController.showCurrentSummarySheet();
         eventList.refresh();
+        refreshSummarySheetList();
     }
 
 
@@ -84,6 +85,11 @@ public class SummarySheetList {
         }
     }
 
+    private void refreshSummarySheetList(){
+        summarySheetItems = eventList.getSelectionModel().getSelectedItem().getServices();
+        summarySheetList.setItems(summarySheetItems);
+    }
+
     public void deleteButtonPressed(ActionEvent actionEvent) {
         ServiceInfo currentService = summarySheetList.getSelectionModel().getSelectedItem();
         try{
@@ -93,6 +99,7 @@ public class SummarySheetList {
             e.printStackTrace();
         }
         eventList.refresh();
+        refreshSummarySheetList();
     }
 
     public void openButtonPressed(ActionEvent actionEvent) {
@@ -105,5 +112,6 @@ public class SummarySheetList {
         }
         kitchenManagementController.showCurrentSummarySheet();
         eventList.refresh();
+        refreshSummarySheetList();;
     }
 }
