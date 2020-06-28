@@ -107,4 +107,8 @@ public class KitchenShift implements Comparable<KitchenShift> {
         String upd = "UPDATE kitchenshifts SER `is complete` = " + shift.isComplete + " WHERE date = " + shift.date;
         PersistenceManager.executeUpdate(upd);
     }
+
+    public boolean isComplete() {
+        return isComplete;
+    }
 }
