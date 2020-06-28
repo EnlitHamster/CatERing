@@ -41,7 +41,6 @@ public class SummarySheet {
     }
 
     public void removeJob(KitchenJob job) {
-        CatERing.getInstance().getShiftManager().removeKitchenJob(job);
         jobs.remove(job);
     }
 
@@ -61,7 +60,6 @@ public class SummarySheet {
     }
 
     public void removeAllJobs(Collection<KitchenJob> jobs) {
-        CatERing.getInstance().getShiftManager().removeAllKitchenJob(jobs);
         this.jobs.removeAll(jobs);
     }
 

@@ -138,7 +138,6 @@ public class ShiftManager {
     }
 
     public KitchenShift createKitchenShift(Timestamp date) {
-        System.out.println("Creating");
         KitchenShift shift = new KitchenShift(date);
         shifts.add(shift);
         this.notifyKitchenShiftAdded(shift);

@@ -95,7 +95,6 @@ public class KitchenJob {
     // STATIC METHODS FOR PERSISTENCE
 
     public static void deleteKitchenJob(KitchenJob job) {
-        System.out.println(job.id);
         String del = "DELETE FROM kitchenjobs WHERE id = " + job.id;
         PersistenceManager.executeUpdate(del);
         loadedJobs.remove(job.id);

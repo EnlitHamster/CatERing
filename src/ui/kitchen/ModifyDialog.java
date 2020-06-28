@@ -22,12 +22,22 @@ public class ModifyDialog {
 
     public void okPressed() {
         try {
-            workingJob.setQuantity(Integer.parseInt(quantity.getText()));
-            workingJob.setTimeEstimate(Long.parseLong(estimate.getText()));
+            if (!quantity.getText().isEmpty() && !quantity.getText().isBlank()) {
+                int p = Integer.parseInt(quantity.getText());
+                if (p < 0) throw new IllegalArgumentException();
+                workingJob.setQuantity(p);
+            }
+
+            if (!estimate.getText().isEmpty() && !estimate.getText().isBlank()) {
+                long p = Long.parseLong(estimate.getText());
+                if (p < 0) throw new IllegalArgumentException();
+                workingJob.setTimeEstimate(p);
+            }
+
             myStage.close();
         }
-        catch (NumberFormatException e){
-            Alert alert = new Alert(Alert.AlertType.WARNING, "La quantita' dev'essere un intero, mentre la stima di tempo un decimale");
+        catch (IllegalArgumentException e){
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Quantità e Stima tempo devono essere interi positivi");
             alert.showAndWait();
         }
     }

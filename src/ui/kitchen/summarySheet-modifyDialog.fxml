@@ -31,7 +31,7 @@
             <Insets right="5.0" />
          </GridPane.margin>
       </TextField>
-      <Label text="Stima tempo">
+      <Label text="Stima tempo (min)">
          <GridPane.margin>
             <Insets left="5.0" />
          </GridPane.margin>

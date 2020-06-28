@@ -65,7 +65,6 @@ public class MenuList {
             menuList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
             menuList.getSelectionModel().selectedItemProperty().addListener((observableValue, oldMenu, newMenu) -> {
                 User u = CatERing.getInstance().getUserManager().getCurrentUser();
-                System.out.println(u.getId());
 
                 eliminaButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));
                 apriButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));

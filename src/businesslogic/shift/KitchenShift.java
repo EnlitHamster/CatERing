@@ -72,7 +72,6 @@ public class KitchenShift implements Comparable<KitchenShift> {
                 "UPDATE kitchenjobs " +
                 "SET shift = " + j.getShift().id + " " +
                 "WHERE id = " + j.getId();
-        System.out.println(query);
         PersistenceManager.executeUpdate(query);
 
         query = "SELECT * FROM kitchenshifts WHERE id = " + j.getShift().id;

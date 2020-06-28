@@ -6,8 +6,6 @@ import businesslogic.kitchen.KitchenJob;
 import businesslogic.kitchen.KitchenJobsException;
 import businesslogic.kitchen.KitchenJobsManager;
 import businesslogic.kitchen.SummarySheet;
-import businesslogic.menu.Section;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -168,7 +166,7 @@ public class SummarySheetContent {
         }
     }
 
-    private void changeSectionPosition(int change) {
+    private void changeJobPosition(int change) {
         int newpos = jobList.getSelectionModel().getSelectedIndex() + change;
         KitchenJob job = jobList.getSelectionModel().getSelectedItem();
         try {
@@ -181,11 +179,11 @@ public class SummarySheetContent {
     }
 
     public void upButtonPressed() {
-        this.changeSectionPosition(-1);
+        this.changeJobPosition(-1);
     }
 
     public void downButtonPressed() {
-        this.changeSectionPosition(+1);
+        this.changeJobPosition(+1);
     }
 
     public void shiftBoardButtonPressed() {
@@ -221,7 +219,7 @@ public class SummarySheetContent {
         }
     }
 
-    public void deleteAssignmentBUttonPressed() {
+    public void deleteAssignmentButtonPressed() {
         try {
             getKitchenManager().unassignJob(getCurrentJob());
             refreshCurrentJob();

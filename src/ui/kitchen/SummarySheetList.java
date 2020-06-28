@@ -37,7 +37,6 @@ public class SummarySheetList {
     }
 
     @FXML public void endButtonPressed(){
-        System.out.println("." + kitchenManagementController);
         kitchenManagementController.endKitchenManagement();
     }
 
