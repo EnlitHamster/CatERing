@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Giu 28, 2020 alle 18:34
+-- Creato il: Giu 29, 2020 alle 11:34
 -- Versione del server: 10.1.32-MariaDB
 -- Versione PHP: 7.2.5
 
@@ -43,7 +43,7 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`id`, `name`, `date_start`, `date_end`, `expected_participants`, `organizer_id`, `chef`) VALUES
-(1, 'Convegno Agile Community', '2020-09-25', '2020-09-25', 100, 2, 2),
+(1, 'Convegno Agile Community', '2020-09-25', '2020-09-25', 100, 2, 3),
 (2, 'Compleanno di Sara', '2020-08-13', '2020-08-13', 25, 2, 2),
 (3, 'Fiera del Sedano Rapa', '2020-10-02', '2020-10-04', 400, 1, 2);
 
@@ -73,9 +73,19 @@ INSERT INTO `kitchenjobs` (`id`, `time estimate`, `quantity`, `is complete`, `as
 (1, NULL, NULL, 0, NULL, NULL, 9, 2, 0),
 (2, NULL, NULL, 0, NULL, NULL, 9, 2, 1),
 (3, NULL, NULL, 0, NULL, NULL, 10, 2, 2),
-(4, NULL, NULL, 0, NULL, NULL, 11, 2, 3),
+(4, 10, 4, 0, NULL, NULL, 11, 2, 3),
 (6, NULL, NULL, 0, NULL, NULL, 12, 2, 4),
-(7, NULL, NULL, 0, NULL, NULL, 12, 2, 5);
+(7, NULL, NULL, 0, NULL, NULL, 12, 2, 5),
+(9, NULL, NULL, 0, NULL, NULL, 1, 8, 0),
+(10, NULL, NULL, 0, NULL, NULL, 3, 8, 1),
+(11, NULL, NULL, 0, 4, 7, 23, 8, 2),
+(12, NULL, NULL, 0, 4, 5, 22, 8, 3),
+(13, NULL, NULL, 0, 7, 5, 25, 8, 4),
+(14, NULL, NULL, 0, 5, 6, 21, 8, 5),
+(15, NULL, NULL, 0, NULL, NULL, 20, 8, 6),
+(16, NULL, NULL, 0, NULL, NULL, 8, 8, 7),
+(17, NULL, NULL, 0, NULL, NULL, 7, 8, 8),
+(18, NULL, NULL, 0, NULL, NULL, 8, 8, 9);
 
 -- --------------------------------------------------------
 
@@ -94,7 +104,11 @@ CREATE TABLE `kitchenshifts` (
 --
 
 INSERT INTO `kitchenshifts` (`id`, `date`, `is complete`) VALUES
-(5, '2020-09-10 08:00:00', 1);
+(5, '2020-09-10 08:00:00', 1),
+(6, '2020-09-10 07:00:00', 0),
+(7, '2020-09-10 09:00:00', 0),
+(8, '2020-09-11 07:00:00', 0),
+(9, '2020-09-11 08:00:00', 0);
 
 -- --------------------------------------------------------
 
@@ -134,7 +148,12 @@ INSERT INTO `kitchentasks` (`id`, `name`, `is recipe`, `notes`, `tags`) VALUES
 (17, 'Tramezzini', 1, NULL, NULL),
 (18, 'Sorbetto al limone', 1, NULL, NULL),
 (19, 'Torta Saint Honoré', 1, NULL, NULL),
-(20, 'Risotto alla zucca', 1, NULL, NULL);
+(20, 'Risotto alla zucca', 1, NULL, NULL),
+(21, 'Passata di pomodoro', 0, NULL, NULL),
+(22, 'Pappa al pomodoro', 0, NULL, NULL),
+(23, 'Minestra pomodoro e polpette', 1, NULL, NULL),
+(24, 'Polpette di carne', 1, NULL, NULL),
+(25, 'Polpette di carne', 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -172,7 +191,12 @@ INSERT INTO `menufeatures` (`menu_id`, `name`, `value`) VALUES
 (87, 'Buffet', 1),
 (87, 'Richiede cucina', 1),
 (87, 'Finger food', 1),
-(87, 'Piatti caldi', 1);
+(87, 'Piatti caldi', 1),
+(88, 'Richiede cuoco', 1),
+(88, 'Buffet', 0),
+(88, 'Richiede cucina', 1),
+(88, 'Finger food', 0),
+(88, 'Piatti caldi', 1);
 
 -- --------------------------------------------------------
 
@@ -222,7 +246,13 @@ INSERT INTO `menuitems` (`id`, `menu_id`, `section_id`, `description`, `recipe_i
 (127, 87, 46, 'Insalata di riso', 4, 3),
 (128, 87, 0, 'Risotto alla zucca', 20, 0),
 (129, 87, 0, 'Torta Saint Honoré', 19, 1),
-(130, 87, 0, 'Sorbetto al limone', 18, 2);
+(130, 87, 0, 'Sorbetto al limone', 18, 2),
+(131, 88, 47, 'Vitello tonnato', 1, 0),
+(132, 88, 47, 'Alici marinate', 3, 1),
+(133, 88, 48, 'Zuppa svedese', 23, 0),
+(134, 88, 48, 'Risotto alla zucca', 20, 1),
+(135, 88, 49, 'Salmone al forno', 8, 0),
+(136, 88, 49, 'Hamburger', 7, 1);
 
 -- --------------------------------------------------------
 
@@ -245,7 +275,8 @@ INSERT INTO `menus` (`id`, `title`, `owner_id`, `published`) VALUES
 (80, 'Coffee break mattutino', 2, 1),
 (82, 'Coffee break pomeridiano', 2, 1),
 (86, 'Cena di compleanno pesce', 3, 1),
-(87, 'Obladì Obladà', 2, 1);
+(87, 'Obladì Obladà', 2, 1),
+(88, 'Pranzo domenicale', 5, 0);
 
 -- --------------------------------------------------------
 
@@ -268,7 +299,10 @@ INSERT INTO `menusections` (`id`, `menu_id`, `name`, `position`) VALUES
 (42, 86, 'Primi', 1),
 (44, 86, 'Dessert', 3),
 (45, 87, 'Antipasti', 0),
-(46, 87, 'Antipasti', 0);
+(46, 87, 'Antipasti', 0),
+(47, 88, 'Antipasti', 0),
+(48, 88, 'Primi', 1),
+(49, 88, 'Secondi', 2);
 
 -- --------------------------------------------------------
 
@@ -321,7 +355,7 @@ INSERT INTO `services` (`id`, `event_id`, `name`, `proposed_menu_id`, `approved_
 (5, 1, 'Cena sociale', 0, 0, '2020-09-25', '20:00:00', '22:30:00', 40),
 (6, 3, 'Pranzo giorno 1', 0, 0, '2020-10-02', '12:00:00', '15:00:00', 200),
 (7, 3, 'Pranzo giorno 2', 0, 0, '2020-10-03', '12:00:00', '15:00:00', 300),
-(8, 3, 'Pranzo giorno 3', 0, 0, '2020-10-04', '12:00:00', '15:00:00', 400);
+(8, 3, 'Pranzo giorno 3', 0, 88, '2020-10-04', '12:00:00', '15:00:00', 400);
 
 -- --------------------------------------------------------
 
@@ -339,7 +373,17 @@ CREATE TABLE `shiftavailablecooks` (
 --
 
 INSERT INTO `shiftavailablecooks` (`shift`, `cook`) VALUES
-(5, 4);
+(5, 4),
+(5, 7),
+(6, 5),
+(6, 6),
+(7, 4),
+(7, 7),
+(8, 5),
+(8, 6),
+(8, 7),
+(9, 4),
+(9, 5);
 
 -- --------------------------------------------------------
 
@@ -351,6 +395,17 @@ CREATE TABLE `usedpreparations` (
   `recipe` int(11) NOT NULL,
   `preparation` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `usedpreparations`
+--
+
+INSERT INTO `usedpreparations` (`recipe`, `preparation`) VALUES
+(6, 21),
+(16, 21),
+(22, 21),
+(23, 22),
+(23, 25);
 
 -- --------------------------------------------------------
 
@@ -506,37 +561,37 @@ ALTER TABLE `events`
 -- AUTO_INCREMENT per la tabella `kitchenjobs`
 --
 ALTER TABLE `kitchenjobs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT per la tabella `kitchenshifts`
 --
 ALTER TABLE `kitchenshifts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT per la tabella `kitchentasks`
 --
 ALTER TABLE `kitchentasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT per la tabella `menuitems`
 --
 ALTER TABLE `menuitems`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
 
 --
 -- AUTO_INCREMENT per la tabella `menus`
 --
 ALTER TABLE `menus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT per la tabella `menusections`
 --
 ALTER TABLE `menusections`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT per la tabella `services`
